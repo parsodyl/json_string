@@ -1,5 +1,5 @@
-import 'package:json_string/json_string.dart';
 import 'package:test/test.dart';
+import 'package:json_string/json_string.dart';
 
 void main() {
   setUp(() {

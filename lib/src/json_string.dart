@@ -48,6 +48,19 @@ class JsonString {
     return JsonString.encode(dynamicMap);
   }
 
+  static JsonString encodePrimitiveList<T>(List<T> list) {
+    assert(list != null);
+    final dynamicList = disassemblePrimitiveList<T>(list);
+    return JsonString.encode(dynamicList);
+  }
+
+  static JsonString encodeObjectList<T>(List<T> list,
+      {JsonObjectEncoder<T> encoder}) {
+    assert(list != null);
+    final dynamicList = disassembleObjectList<T>(list, builder: encoder);
+    return JsonString.encode(dynamicList);
+  }
+
   // <<standard methods>>
 
   const JsonString._(this.source);
