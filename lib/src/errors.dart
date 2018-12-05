@@ -1,10 +1,8 @@
 import 'dart:core';
 
-
-/// Exception thrown when a string does not have the 
+/// Exception thrown when a string does not have the
 /// expected JSON format and cannot be parsed.
 class JsonFormatException extends FormatException {
-  
   /// Default constructor.
   JsonFormatException([String message = "", String source, int offset])
       : super(message, source, offset);
@@ -21,10 +19,9 @@ class JsonFormatException extends FormatException {
 
 /// Error thrown during a JSON encoding operation.
 class JsonEncodingError extends Error {
-  
-  /// The cause of this error. 
+  /// The cause of this error.
   final dynamic cause;
-  
+
   /// Default constructor.
   JsonEncodingError(this.cause);
 
@@ -36,7 +33,6 @@ class JsonEncodingError extends Error {
 
 /// Error thrown during a JSON decoding operation.
 class JsonDecodingError extends Error {
-
   /// The cause of this error.
   final dynamic cause;
 

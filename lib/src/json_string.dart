@@ -6,14 +6,13 @@ import 'package:json_string/src/utils.dart';
 
 /// A single piece of JSON data.
 class JsonString {
-
   /// The JSON data source reppresentation for this object.
   final String source;
 
   // <<constructors>>
 
   /// Constructs a [JsonString] if [source] is a valid JSON.
-  /// 
+  ///
   /// If not, it throws a [JsonFormatException].
   factory JsonString(String source) {
     assert(source != null);
@@ -29,7 +28,7 @@ class JsonString {
   }
 
   /// Constructs a JsonString if [source] is a valid JSON.
-  /// 
+  ///
   /// If not, it returns [null].
   factory JsonString.orNull(String source) {
     assert(source != null);
@@ -41,20 +40,20 @@ class JsonString {
     }
   }
 
-   // <<encoders>>
+  // <<encoders>>
 
   /// Constructs a [JsonString] converting [value] to a valid JSON.
-  /// 
-  /// If [value] contains objects that are not directly encodable to 
-  /// a valid JSON, the [encoder] function is used to convert it to 
+  ///
+  /// If [value] contains objects that are not directly encodable to
+  /// a valid JSON, the [encoder] function is used to convert it to
   /// an object that must be directly encodable.
   JsonString.encode(Object value, {encoder(object)})
       : this.source = _encodeSafely(value, encoder: encoder);
 
-  /// Constructs a [JsonString] converting [value] to a 
+  /// Constructs a [JsonString] converting [value] to a
   /// valid JSON Object.
-  /// 
-  /// If [T] implements [Jsonable] interface, the result returned 
+  ///
+  /// If [T] implements [Jsonable] interface, the result returned
   /// by `.toJson()` is used during the conversion.
   /// If not, the [encoder] function must be provided.
   static JsonString encodeObject<T extends Object>(T value,
@@ -65,7 +64,7 @@ class JsonString {
   }
 
   /// Constructs a [JsonString] converting [list] to a valid JSON List.
-  /// 
+  ///
   /// [T] must be a primitive type (int, double, bool or String).
   static JsonString encodePrimitiveList<T>(List<T> list) {
     assert(list != null);
@@ -74,8 +73,8 @@ class JsonString {
   }
 
   /// Constructs a [JsonString] converting [list] to a valid JSON list.
-  /// 
-  /// [T] represents a JSON Object, see `.encodeObject()` for reference. 
+  ///
+  /// [T] represents a JSON Object, see `.encodeObject()` for reference.
   static JsonString encodeObjectList<T>(List<T> list,
       {JsonObjectEncoder<T> encoder}) {
     assert(list != null);
@@ -86,7 +85,7 @@ class JsonString {
   // <<decoders>>
 
   /// The JSON data directly decoded.
-  /// 
+  ///
   /// (JSON Objects are converted to maps with string keys.)
   dynamic get decodedValue => _decode(this.source);
 
@@ -109,7 +108,7 @@ class JsonString {
 
   // <<private methods>>
 
-  const JsonString._(this.source); 
+  const JsonString._(this.source);
 
   static Object _decode(String source,
       {Function(Object key, Object value) decoder}) {
@@ -129,5 +128,4 @@ class JsonString {
       throw JsonEncodingError(e);
     }
   }
-
 }
