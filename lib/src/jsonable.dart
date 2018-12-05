@@ -8,4 +8,5 @@ abstract class _Jsonable extends Object {
   Map<String, dynamic> toJson();
 }
 
+/// An object directly encodable into a valid JSON.
 mixin Jsonable implements _Jsonable {}

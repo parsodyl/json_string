@@ -4,11 +4,17 @@ import 'package:json_string/src/errors.dart';
 import 'package:json_string/src/functions.dart';
 import 'package:json_string/src/utils.dart';
 
+/// A single piece of JSON data.
 class JsonString {
+
+  /// The JSON data source reppresentation for this object.
   final String source;
 
   // <<constructors>>
 
+  /// Constructs a [JsonString] if [source] is a valid JSON.
+  /// 
+  /// If not, it throws a [JsonFormatException].
   factory JsonString(String source) {
     assert(source != null);
     try {
@@ -22,6 +28,9 @@ class JsonString {
     }
   }
 
+  /// Constructs a JsonString if [source] is a valid JSON.
+  /// 
+  /// If not, it returns [null].
   factory JsonString.orNull(String source) {
     assert(source != null);
     try {
@@ -34,13 +43,20 @@ class JsonString {
 
    // <<encoders>>
 
+  /// Constructs a [JsonString] converting [value] to a valid JSON.
+  /// 
+  /// If [value] contains objects that are not directly encodable to 
+  /// a valid JSON, the [encoder] function is used to convert it to 
+  /// an object that must be directly encodable.
   JsonString.encode(Object value, {encoder(object)})
       : this.source = _encodeSafely(value, encoder: encoder);
 
-  // <<encoders>>
-
-  dynamic get decodedValue => _decode(this.source);
-
+  /// Constructs a [JsonString] converting [value] to a 
+  /// valid JSON Object.
+  /// 
+  /// If [T] implements [Jsonable] interface, the result returned 
+  /// by `.toJson()` is used during the conversion.
+  /// If not, the [encoder] function must be provided.
   static JsonString encodeObject<T extends Object>(T value,
       {JsonObjectEncoder<T> encoder}) {
     assert(value != null);
@@ -48,12 +64,18 @@ class JsonString {
     return JsonString.encode(dynamicMap);
   }
 
+  /// Constructs a [JsonString] converting [list] to a valid JSON List.
+  /// 
+  /// [T] must be a primitive type (int, double, bool or String).
   static JsonString encodePrimitiveList<T>(List<T> list) {
     assert(list != null);
     final dynamicList = disassemblePrimitiveList<T>(list);
     return JsonString.encode(dynamicList);
   }
 
+  /// Constructs a [JsonString] converting [list] to a valid JSON list.
+  /// 
+  /// [T] represents a JSON Object, see `.encodeObject()` for reference. 
   static JsonString encodeObjectList<T>(List<T> list,
       {JsonObjectEncoder<T> encoder}) {
     assert(list != null);
@@ -61,9 +83,14 @@ class JsonString {
     return JsonString.encode(dynamicList);
   }
 
-  // <<standard methods>>
+  // <<decoders>>
 
-  const JsonString._(this.source);
+  /// The JSON data directly decoded.
+  /// 
+  /// (JSON Objects are converted to maps with string keys.)
+  dynamic get decodedValue => _decode(this.source);
+
+  // <<standard methods>>
 
   @override
   bool operator ==(Object other) =>
@@ -79,6 +106,10 @@ class JsonString {
   String toString() {
     return 'JsonString{source: $source}';
   }
+
+  // <<private methods>>
+
+  const JsonString._(this.source); 
 
   static Object _decode(String source,
       {Function(Object key, Object value) decoder}) {
