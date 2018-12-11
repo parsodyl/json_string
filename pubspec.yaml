@@ -1,6 +1,6 @@
 name: json_string
 description: A simple and lightweight JSON data container for Dart and Flutter.
-version: 0.0.2
+version: 0.0.4
 author: Daniele Paradiso <parsodyl@gmail.com>
 homepage: https://github.com/parsodyl/json_string
 

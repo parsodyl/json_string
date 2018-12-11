@@ -12,7 +12,7 @@ Add `json_string` to `pubspec.yaml` under the `dependencies` subsection.
 
 ```yaml
 dependencies:
-  json_string: ^0.0.3
+  json_string: ^0.0.4
 ```
 ## Install
 
@@ -129,17 +129,35 @@ final userList = [
     User(username: 'john_doe', password: 'qwerty'),
     User(username: 'clara_brothers', password: 'asdfgh')
 ];
+
 // default encoding
 final jsonString1 = JsonString.encodeObjectList(userList);
-// definend encoding
+
+// custom encoding
 final jsonString2 = JsonString.encodeObjectList(userList, encoder: (u) => {
     'ba': btoa("${u.username}:${u.password}"),
 });
 ```
 #### Primitive lists
 
-TBD
+If you want to encode a list of primitives (**int**, **double**, **String** or **bool**), just use `encodePrimitiveList()`:
+
+```dart
+// ints
+final fibonacci = [1, 1, 2, 3, 5, 8, 13];
+final jsonString = JsonString.encodePrimitiveList(fibonacci);
+
+// strings
+final message = ["h", "e", "l", "l", "o", "!"];
+final jsonString = JsonString.encodePrimitiveList(message);
+
+// doubles
+final temperatures = [16.0, 18.0, 21.0, 19.0];
+final jsonString = JsonString.encodePrimitiveList(temperatures);
+```
+
+
 
 ## Contribute
 
-If you find a bug or you would like to see a new feature, please create an [issue](https://github.com/letsar/kiwi/issues). 
+If you find a bug or you would like to see a new feature, please create an [issue](https://github.com/parsodyl/json_string/issues). 
