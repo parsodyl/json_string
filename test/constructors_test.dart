@@ -32,6 +32,29 @@ void main() {
     },
   );
   test(
+    'success test: construct JsonString #3 (default constr + cache enabled)',
+    () {
+      // prepare input
+      final source = '{"username":"john_doe","password":"eiaw"}';
+      // execute
+      final jsonString = JsonString(source, enableCache: true);
+      // check
+      expect(jsonString, TypeMatcher<JsonString>());
+    },
+  );
+  test(
+    'success test: construct JsonString #4 (orNull  constr + cache enabled)',
+    () {
+      // prepare input
+      final source = '{"username":"john_doe","password":"eiaw"}';
+      // execute
+      final jsonString = JsonString.orNull(source, enableCache: true);
+      // check
+      expect(jsonString, TypeMatcher<JsonString>());
+      expect(jsonString, isNotNull);
+    },
+  );
+  test(
     'fail test: construct JsonString with bad source #1 (default constr)',
     () {
       // prepare input

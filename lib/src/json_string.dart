@@ -14,11 +14,12 @@ class JsonString {
   /// Constructs a [JsonString] if [source] is a valid JSON.
   ///
   /// If not, it throws a [JsonFormatException].
-  factory JsonString(String source) {
+  factory JsonString(String source, {bool enableCache = false}) {
     assert(source != null);
     try {
       final decodedSource = _decode(source);
-      return JsonString._(_encode(decodedSource));
+      final cachedValue = enableCache ? decodedSource : null;
+      return JsonString._(_encode(decodedSource), cachedValue);
     } on FormatException catch (e) {
       throw JsonFormatException.fromParent(e);
     } catch (_) {
@@ -30,11 +31,12 @@ class JsonString {
   /// Constructs a JsonString if [source] is a valid JSON.
   ///
   /// If not, it returns [null].
-  factory JsonString.orNull(String source) {
+  factory JsonString.orNull(String source, {bool enableCache = false}) {
     assert(source != null);
     try {
       final decodedSource = _decode(source);
-      return JsonString._(_encode(decodedSource));
+      final cachedValue = enableCache ? decodedSource : null;
+      return JsonString._(_encode(decodedSource), cachedValue);
     } catch (_) {
       return null;
     }
@@ -48,7 +50,8 @@ class JsonString {
   /// a valid JSON, the [encoder] function is used to convert it to
   /// an object that must be directly encodable.
   JsonString.encode(Object value, {encoder(object)})
-      : this.source = _encodeSafely(value, encoder: encoder);
+      : this.source = _encodeSafely(value, encoder: encoder),
+        this._cachedValue = null;
 
   /// Constructs a [JsonString] converting [value] to a
   /// valid JSON Object.
@@ -87,7 +90,8 @@ class JsonString {
   /// The JSON data directly decoded.
   ///
   /// (JSON Objects are converted to maps with string keys.)
-  dynamic get decodedValue => _decode(this.source);
+  dynamic get decodedValue =>
+      (_cachedValue != null) ? _cachedValue : _decode(this.source);
 
   // <<standard methods>>
 
@@ -106,9 +110,13 @@ class JsonString {
     return 'JsonString{source: $source}';
   }
 
+  // <<private fields>>
+
+  final dynamic _cachedValue;
+
   // <<private methods>>
 
-  const JsonString._(this.source);
+  const JsonString._(this.source, this._cachedValue);
 
   static Object _decode(String source,
       {Function(Object key, Object value) decoder}) {
