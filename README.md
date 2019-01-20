@@ -140,10 +140,10 @@ final jsonString2 = JsonString.encodeObjectList(userList, encoder: (u) => {
 ```
 #### Primitive lists
 
-If you want to encode a list of primitives (**int**, **double**, **String** or **bool**), just use `encodePrimitiveList()`:
+If you want to encode a list of primitive values (**int**, **double**, **String** or **bool**), use `encodePrimitiveList()`:
 
 ```dart
-// ints
+// integers
 final fibonacci = [1, 1, 2, 3, 5, 8, 13];
 final jsonString = JsonString.encodePrimitiveList(fibonacci);
 
@@ -154,6 +154,10 @@ final jsonString = JsonString.encodePrimitiveList(message);
 // doubles
 final temperatures = [16.0, 18.0, 21.0, 19.0];
 final jsonString = JsonString.encodePrimitiveList(temperatures);
+
+// booleans
+final flags = [false, false, true, false];
+final jsonString = JsonString.encodePrimitiveList(flags);
 ```
 
 
