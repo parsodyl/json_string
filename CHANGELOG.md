@@ -1,3 +1,7 @@
+## 0.0.5
+
+* Cache option added.
+
 ## 0.0.4
 
 * README updated.
