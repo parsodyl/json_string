@@ -2,8 +2,6 @@
 
 [![Pub](https://img.shields.io/pub/v/json_string.svg)](https://pub.dartlang.org/packages/json_string)
 
-**⚠️ Notice: until version 0.1.0 is released, API signature may change.**
-
 A simple and lightweight JSON data container for Dart and Flutter.
 
 ## Configure
@@ -12,7 +10,7 @@ Add `json_string` to `pubspec.yaml` under the `dependencies` subsection.
 
 ```yaml
 dependencies:
-  json_string: ^0.0.5
+  json_string: ^0.1.0
 ```
 ## Install
 
@@ -44,7 +42,7 @@ When you create a new instance, your JSON data is **evaluated** and **minified**
 
 ### Overview
 
-Check if your string is a valid JSON, simply using the default constructor:
+Check if your string represents a valid JSON, simply using the default constructor:
 
 ```dart
 try {
@@ -84,7 +82,7 @@ print(credentials['password']); // querty
 
 ### Encoding
 
-JsonString provide a set of different methods to encode Dart types, all implemented in a **type-safe** way and without any use of reflection or code generators.
+JsonString provides a set of different methods to encode Dart types, all implemented in a **type-safe** way and without any use of reflection or code generators.
 
 #### Plain objects
 

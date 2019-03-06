@@ -44,7 +44,7 @@ class JsonString {
 
   // <<encoders>>
 
-  /// Constructs a [JsonString] converting [value] to a valid JSON.
+  /// Constructs a [JsonString] converting [value] into a valid JSON.
   ///
   /// If [value] contains objects that are not directly encodable to
   /// a valid JSON, the [encoder] function is used to convert it to
@@ -53,7 +53,7 @@ class JsonString {
       : this.source = _encodeSafely(value, encoder: encoder),
         this._cachedValue = null;
 
-  /// Constructs a [JsonString] converting [value] to a
+  /// Constructs a [JsonString] converting [value] into a
   /// valid JSON Object.
   ///
   /// If [T] implements [Jsonable] interface, the result returned
@@ -66,7 +66,7 @@ class JsonString {
     return JsonString.encode(dynamicMap);
   }
 
-  /// Constructs a [JsonString] converting [list] to a valid JSON List.
+  /// Constructs a [JsonString] converting [list] into a valid JSON List.
   ///
   /// [T] must be a primitive type (int, double, bool or String).
   static JsonString encodePrimitiveList<T>(List<T> list) {
@@ -75,7 +75,7 @@ class JsonString {
     return JsonString.encode(dynamicList);
   }
 
-  /// Constructs a [JsonString] converting [list] to a valid JSON list.
+  /// Constructs a [JsonString] converting [list] into a valid JSON list.
   ///
   /// [T] represents a JSON Object, see `.encodeObject()` for reference.
   static JsonString encodeObjectList<T>(List<T> list,

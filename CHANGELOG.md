@@ -1,3 +1,8 @@
+## 0.1.0
+
+- Documentation corrected.
+- First stable release.
+
 ## 0.0.5
 
 * Cache option added.
