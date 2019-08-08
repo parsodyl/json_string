@@ -87,11 +87,24 @@ class JsonString {
 
   // <<decoders>>
 
-  /// The JSON data directly decoded.
+  /// The JSON data directly decoded as a dynamic type.
   ///
-  /// (JSON Objects are converted to maps with string keys.)
+  /// (JSON objects are converted to instances of Map<String, dynamic> and
+  ///  JSON lists are converted to instances of List<dynamic>)
   dynamic get decodedValue =>
       (_cachedValue != null) ? _cachedValue : _decode(this.source);
+
+  /// The JSON data decoded as an instance of Map<String, dynamic>.
+  ///
+  /// The JSON data must be a JSON object or it will throw
+  /// a [JsonDecodingError].
+  Map<String, dynamic> get decodedValueAsMap => castToMap(this.decodedValue);
+
+  /// The JSON data decoded as an instance of List<dynamic>.
+  ///
+  /// The JSON data must be a JSON list or it will throw
+  /// a [JsonDecodingError].
+  List<dynamic> get decodedValueAsList => castToList(this.decodedValue);
 
   // <<standard methods>>
 

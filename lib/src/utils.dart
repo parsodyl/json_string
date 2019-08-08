@@ -37,12 +37,44 @@ List<dynamic> disassembleObjectList<T extends Object>(List<T> value,
   }).toList();
 }
 
+Map<String, dynamic> castToMap(dynamic value) {
+  assert(value != null);
+  final Object jsonObject = value;
+  if (!isMap(jsonObject)) {
+    throw JsonDecodingError(
+        "value '${jsonObject.toString()}' is not an instance of Map<String, dynamic>");
+  }
+  return normalizeJsonObject(jsonObject);
+}
+
+List<dynamic> castToList(dynamic value) {
+  assert(value != null);
+  final Object jsonList = value;
+  if (!isList(jsonList)) {
+    throw JsonDecodingError(
+        "value '${jsonList.toString()}' is not an instance of List<dynamic>");
+  }
+  return normalizeJsonList(jsonList);
+}
+
 bool isPrimitiveType<T>() {
   Type type = T;
   final ts = type.toString();
   return ts == 'bool' || ts == 'String' || ts == 'int' || ts == 'double';
 }
 
+bool isMap(dynamic node) {
+  return node is Map<String, dynamic>;
+}
+
+bool isList(dynamic node) {
+  return node is List<dynamic>;
+}
+
 Map<String, dynamic> normalizeJsonObject(Object jsonObject) {
   return jsonObject as Map<String, dynamic>;
+}
+
+List<dynamic> normalizeJsonList(Object jsonList) {
+  return jsonList as List<dynamic>;
 }
