@@ -15,6 +15,13 @@ Map<String, dynamic> disassembleObject<T extends Object>(T value,
       "this is not a Jsonable object: provide a valid encoder.");
 }
 
+T assembleObject<T extends Object>(
+    Map<String, dynamic> jsonObject, JsonObjectDecoder<T> builder) {
+  assert(jsonObject != null);
+  assert(builder != null);
+  return builder(jsonObject);
+}
+
 List<dynamic> disassemblePrimitiveList<T>(List<T> value) {
   assert(value != null);
   final List<T> primitiveList = value;
@@ -37,6 +44,19 @@ List<dynamic> disassembleObjectList<T extends Object>(List<T> value,
   }).toList();
 }
 
+List<T> assembleObjectList<T extends Object>(
+    List<dynamic> jsonList, JsonObjectDecoder<T> builder) {
+  assert(jsonList != null);
+  assert(builder != null);
+  return jsonList.map((e) {
+    if (e == null) {
+      return e as T;
+    }
+    final map = castToMap(e);
+    return assembleObject<T>(map, builder);
+  }).toList();
+}
+
 Map<String, dynamic> castToMap(dynamic value) {
   assert(value != null);
   final Object jsonObject = value;
@@ -54,7 +74,21 @@ List<dynamic> castToList(dynamic value) {
     throw JsonDecodingError(
         "value '${jsonList.toString()}' is not an instance of List<dynamic>");
   }
-  return normalizeJsonList(jsonList);
+  return jsonList as List<dynamic>;
+}
+
+List<T> castToPrimitiveList<T>(dynamic value) {
+  assert(value != null);
+  if (!isPrimitiveType<T>()) {
+    throw JsonDecodingError(
+        "type '${T.toString()}' is not a JSON primitive type");
+  }
+  final Object jsonList = value;
+  if (!isTypedList<T>(jsonList)) {
+    throw JsonDecodingError(
+        "value '${jsonList.toString()}' is not an instance of List<${T.toString()}>");
+  }
+  return List<T>.from(jsonList);
 }
 
 bool isPrimitiveType<T>() {
@@ -71,10 +105,21 @@ bool isList(dynamic node) {
   return node is List<dynamic>;
 }
 
-Map<String, dynamic> normalizeJsonObject(Object jsonObject) {
-  return jsonObject as Map<String, dynamic>;
+bool isTypedList<T>(dynamic node) {
+  if (!isList(node)) {
+    return false;
+  }
+  for (final e in node) {
+    if (e == null) {
+      continue;
+    }
+    if (!(e is T)) {
+      return false;
+    }
+  }
+  return true;
 }
 
-List<dynamic> normalizeJsonList(Object jsonList) {
-  return jsonList as List<dynamic>;
+Map<String, dynamic> normalizeJsonObject(Object jsonObject) {
+  return jsonObject as Map<String, dynamic>;
 }

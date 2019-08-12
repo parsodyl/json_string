@@ -78,7 +78,7 @@ class JsonString {
   /// Constructs a [JsonString] converting [list] into a valid JSON list.
   ///
   /// [T] represents a JSON Object, see `.encodeObject()` for reference.
-  static JsonString encodeObjectList<T>(List<T> list,
+  static JsonString encodeObjectList<T extends Object>(List<T> list,
       {JsonObjectEncoder<T> encoder}) {
     assert(list != null);
     final dynamicList = disassembleObjectList<T>(list, builder: encoder);
@@ -89,22 +89,44 @@ class JsonString {
 
   /// The JSON data directly decoded as a dynamic type.
   ///
-  /// (JSON objects are converted to instances of Map<String, dynamic> and
-  ///  JSON lists are converted to instances of List<dynamic>)
+  /// (this is the most general one.)
   dynamic get decodedValue =>
       (_cachedValue != null) ? _cachedValue : _decode(this.source);
 
-  /// The JSON data decoded as an instance of Map<String, dynamic>.
+  /// The JSON data decoded as an instance of [Map<String, dynamic>].
   ///
   /// The JSON data must be a JSON object or it will throw
   /// a [JsonDecodingError].
   Map<String, dynamic> get decodedValueAsMap => castToMap(this.decodedValue);
 
-  /// The JSON data decoded as an instance of List<dynamic>.
+  /// The JSON data decoded as an instance of [List<dynamic>].
   ///
   /// The JSON data must be a JSON list or it will throw
   /// a [JsonDecodingError].
   List<dynamic> get decodedValueAsList => castToList(this.decodedValue);
+
+  /// The JSON data decoded as an instance of [T].
+  ///
+  /// The JSON data must be a JSON object or it will throw
+  /// a [JsonDecodingError].
+  T decodedValueAsObject<T extends Object>(JsonObjectDecoder<T> decoder) =>
+      assembleObject<T>(this.decodedValueAsMap, decoder);
+
+  /// The JSON data decoded as an instance of [List<T>].
+  ///
+  /// The JSON data must be a list of JSON primitive values and [T] must 
+  /// be a primitive type (int, double, bool or String) or it will throw 
+  /// a [JsonDecodingError].
+  List<T> decodedValueAsPrimitiveList<T>() =>
+      castToPrimitiveList<T>(this.decodedValue);
+
+  /// The JSON data decoded as an instance of [List<T>].
+  ///
+  /// The JSON data must be a list of JSON objects or it
+  /// will throw a [JsonDecodingError].
+  List<T> decodedValueAsObjectList<T extends Object>(
+          JsonObjectDecoder<T> decoder) =>
+      assembleObjectList<T>(this.decodedValueAsList, decoder);
 
   // <<standard methods>>
 
