@@ -10,7 +10,7 @@ Add `json_string` to `pubspec.yaml` under the `dependencies` subsection.
 
 ```yaml
 dependencies:
-  json_string: ^0.1.0
+  json_string: ^0.2.0
 ```
 ## Install
 

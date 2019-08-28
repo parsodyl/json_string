@@ -1,7 +1,11 @@
+## 0.2.0
+
+* New decoding options added.
+
 ## 0.1.0
 
-- Documentation corrected.
-- First stable release.
+* Documentation corrected.
+* First stable release.
 
 ## 0.0.5
 
