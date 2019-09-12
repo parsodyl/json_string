@@ -28,7 +28,7 @@ class JsonString {
     }
   }
 
-  /// Constructs a JsonString if [source] is a valid JSON.
+  /// Constructs a [JsonString] if [source] is a valid JSON.
   ///
   /// If not, it returns [null].
   factory JsonString.orNull(String source, {bool enableCache = false}) {
@@ -105,28 +105,33 @@ class JsonString {
   /// a [JsonDecodingError].
   List<dynamic> get decodedValueAsList => castToList(this.decodedValue);
 
-  /// The JSON data decoded as an instance of [T].
+  /// Returns the JSON data decoded as an instance of [T extends Object].
   ///
   /// The JSON data must be a JSON object or it will throw
   /// a [JsonDecodingError].
-  T decodedValueAsObject<T extends Object>(JsonObjectDecoder<T> decoder) =>
+  T decodeAsObject<T extends Object>(JsonObjectDecoder<T> decoder) =>
       assembleObject<T>(this.decodedValueAsMap, decoder);
 
-  /// The JSON data decoded as an instance of [List<T>].
+  /// Returns the JSON data decoded as an instance of [List<T>].
   ///
-  /// The JSON data must be a list of JSON primitive values and [T] must 
-  /// be a primitive type (int, double, bool or String) or it will throw 
+  /// The JSON data must be a list of JSON primitive values and [T] must
+  /// be a primitive type (int, double, bool or String) or it will throw
   /// a [JsonDecodingError].
-  List<T> decodedValueAsPrimitiveList<T>() =>
+  List<T> decodeAsPrimitiveList<T>() =>
       castToPrimitiveList<T>(this.decodedValue);
 
-  /// The JSON data decoded as an instance of [List<T>].
+  /// Returns the JSON data decoded as an instance of [List<T extends Object>].
   ///
   /// The JSON data must be a list of JSON objects or it
   /// will throw a [JsonDecodingError].
-  List<T> decodedValueAsObjectList<T extends Object>(
-          JsonObjectDecoder<T> decoder) =>
+  List<T> decodeAsObjectList<T extends Object>(JsonObjectDecoder<T> decoder) =>
       assembleObjectList<T>(this.decodedValueAsList, decoder);
+
+  /// Returns the JSON data decoded as an instance of [T].
+  ///
+  /// The JSON data must be a JSON primitive value and [T] must be a primitive
+  ///  type (int, double, bool or String) or it will throw a [JsonDecodingError].
+  T decodeAsPrimitiveValue<T>() => castToPrimitiveValue<T>(this.decodedValue);
 
   // <<standard methods>>
 

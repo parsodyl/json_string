@@ -35,116 +35,116 @@ void main() {
     // teardown
   });
   test(
-    'fail test: .decodedValueAsPrimitiveList() with no type input',
+    'fail test: .decodeAsPrimitiveList() with no type input',
     () {
       // prepare input
       final source = '[1, 2, 3]';
       // execute
       final jsonString = JsonString(source);
-      final testCall = () => jsonString.decodedValueAsPrimitiveList();
+      final testCall = () => jsonString.decodeAsPrimitiveList();
       // check
       expect(testCall, throwsA(TypeMatcher<JsonDecodingError>()));
     },
   );
   test(
-    'fail test: .decodedValueAsPrimitiveList() with wrong type input #1 (not primitive)',
+    'fail test: .decodeAsPrimitiveList() with wrong type input #1 (not primitive)',
     () {
       // prepare input
       final source = '[1, 2, 3]';
       // execute
       final jsonString = JsonString(source);
-      final testCall = () => jsonString.decodedValueAsPrimitiveList<User>();
+      final testCall = () => jsonString.decodeAsPrimitiveList<User>();
       // check
       expect(testCall, throwsA(TypeMatcher<JsonDecodingError>()));
     },
   );
   test(
-    'fail test: .decodedValueAsPrimitiveList() with wrong type input #2 (String instead of int)',
+    'fail test: .decodeAsPrimitiveList() with wrong type input #2 (String instead of int)',
     () {
       // prepare input
       final source = '[1, 2, 3]';
       // execute
       final jsonString = JsonString(source);
-      final testCall = () => jsonString.decodedValueAsPrimitiveList<String>();
+      final testCall = () => jsonString.decodeAsPrimitiveList<String>();
       // check
       expect(testCall, throwsA(TypeMatcher<JsonDecodingError>()));
     },
   );
   test(
-    'fail test: .decodedValueAsPrimitiveList() with wrong type input #3 (int instead of double)',
+    'fail test: .decodeAsPrimitiveList() with wrong type input #3 (int instead of double)',
     () {
       // prepare input
       final source = '[1.0, 2.0, 3.0]';
       // execute
       final jsonString = JsonString(source);
-      final testCall = () => jsonString.decodedValueAsPrimitiveList<String>();
+      final testCall = () => jsonString.decodeAsPrimitiveList<String>();
       // check
       expect(testCall, throwsA(TypeMatcher<JsonDecodingError>()));
     },
   );
   test(
-    'success test: .decodedValueAsPrimitiveList() with right type input #1 (int)',
+    'success test: .decodeAsPrimitiveList() with right type input #1 (int)',
     () {
       // prepare input
       final source = '[1, 2, 3]';
       // execute
       final jsonString = JsonString(source);
-      final resultList = jsonString.decodedValueAsPrimitiveList<int>();
+      final resultList = jsonString.decodeAsPrimitiveList<int>();
       // check
       expect(resultList, isNotNull);
       expect(resultList, TypeMatcher<List<int>>());
     },
   );
   test(
-    'success test: .decodedValueAsPrimitiveList() with right type input #2 (String)',
+    'success test: .decodeAsPrimitiveList() with right type input #2 (String)',
     () {
       // prepare input
       final source = '["a", "b", "c"]';
       // execute
       final jsonString = JsonString(source);
-      final resultList = jsonString.decodedValueAsPrimitiveList<String>();
+      final resultList = jsonString.decodeAsPrimitiveList<String>();
       // check
       expect(resultList, isNotNull);
       expect(resultList, TypeMatcher<List<String>>());
     },
   );
   test(
-    'success test: .decodedValueAsPrimitiveList() with right type input #3 (double)',
+    'success test: .decodeAsPrimitiveList() with right type input #3 (double)',
     () {
       // prepare input
       final source = '[1.0, 2.0, 3.0]';
       // execute
       final jsonString = JsonString(source);
-      final resultList = jsonString.decodedValueAsPrimitiveList<double>();
+      final resultList = jsonString.decodeAsPrimitiveList<double>();
       // check
       expect(resultList, isNotNull);
       expect(resultList, TypeMatcher<List<double>>());
     },
   );
   test(
-    'success test: .decodedValueAsPrimitiveList() with right type input #4 (bool)',
+    'success test: .decodeAsPrimitiveList() with right type input #4 (bool)',
     () {
       // prepare input
       final source = '[false, true, false]';
       // execute
       final jsonString = JsonString(source);
-      final resultList = jsonString.decodedValueAsPrimitiveList<bool>();
+      final resultList = jsonString.decodeAsPrimitiveList<bool>();
       // check
       expect(resultList, isNotNull);
       expect(resultList, TypeMatcher<List<bool>>());
     },
   );
   test(
-    'success test: .decodedValueAsPrimitiveList() with an empty list',
+    'success test: .decodeAsPrimitiveList() with an empty list',
     () {
       // prepare input
       final source = '[]';
       // execute
       final jsonString = JsonString(source);
-      final intList = jsonString.decodedValueAsPrimitiveList<int>();
-      final doubleList = jsonString.decodedValueAsPrimitiveList<double>();
-      final boolList = jsonString.decodedValueAsPrimitiveList<bool>();
-      final stringList = jsonString.decodedValueAsPrimitiveList<String>();
+      final intList = jsonString.decodeAsPrimitiveList<int>();
+      final doubleList = jsonString.decodeAsPrimitiveList<double>();
+      final boolList = jsonString.decodeAsPrimitiveList<bool>();
+      final stringList = jsonString.decodeAsPrimitiveList<String>();
       // check
       expect(intList, TypeMatcher<List<int>>());
       expect(doubleList, TypeMatcher<List<double>>());
@@ -153,16 +153,16 @@ void main() {
     },
   );
   test(
-    'success test: .decodedValueAsPrimitiveList() with a null filled list',
+    'success test: .decodeAsPrimitiveList() with a null filled list',
     () {
       // prepare input
       final source = '[null, null, null]';
       // execute
       final jsonString = JsonString(source);
-      final intList = jsonString.decodedValueAsPrimitiveList<int>();
-      final doubleList = jsonString.decodedValueAsPrimitiveList<double>();
-      final boolList = jsonString.decodedValueAsPrimitiveList<bool>();
-      final stringList = jsonString.decodedValueAsPrimitiveList<String>();
+      final intList = jsonString.decodeAsPrimitiveList<int>();
+      final doubleList = jsonString.decodeAsPrimitiveList<double>();
+      final boolList = jsonString.decodeAsPrimitiveList<bool>();
+      final stringList = jsonString.decodeAsPrimitiveList<String>();
       // check
       expect(intList, TypeMatcher<List<int>>());
       expect(doubleList, TypeMatcher<List<double>>());
@@ -186,31 +186,31 @@ void main() {
       ''';
       // execute
       final jsonString = JsonString(source);
-      final testCall = () => jsonString.decodedValueAsPrimitiveList<int>();
+      final testCall = () => jsonString.decodeAsPrimitiveList<int>();
       // check
       expect(testCall, throwsA(TypeMatcher<JsonDecodingError>()));
     },
   );
   test(
-    'fail test: .decodedValueAsObjectList() with null input',
+    'fail test: .decodeAsObjectList() with null input',
     () {
       // prepare input
       final source = '[{"username":"john_doe","password":"querty"}]';
       // execute
       final jsonString = JsonString(source);
-      final testCall = () => jsonString.decodedValueAsObjectList(null);
+      final testCall = () => jsonString.decodeAsObjectList(null);
       // check
       expect(testCall, throwsA(TypeMatcher<AssertionError>()));
     },
   );
   test(
-    'success test: .decodedValueAsObjectList() with a proper decoder',
+    'success test: .decodeAsObjectList() with a proper decoder',
     () {
       // prepare input
       final source = '[{"username":"john_doe","password":"querty"}]';
       // execute
       final jsonString = JsonString(source);
-      final resultObject = jsonString.decodedValueAsObjectList(User.fromJson);
+      final resultObject = jsonString.decodeAsObjectList(User.fromJson);
 
       // check
       expect(resultObject, isNotNull);
@@ -224,19 +224,19 @@ void main() {
       final source = '[0, 1, 2, 3]';
       // execute
       final jsonString = JsonString(source);
-      final testCall = () => jsonString.decodedValueAsObjectList(User.fromJson);
+      final testCall = () => jsonString.decodeAsObjectList(User.fromJson);
       // check
       expect(testCall, throwsA(TypeMatcher<JsonDecodingError>()));
     },
   );
   test(
-    'success test: .decodedValueAsObjectList() with a null filled list',
+    'success test: .decodeAsObjectList() with a null filled list',
     () {
       // prepare input
       final source = '[null, null, null]';
       // execute
       final jsonString = JsonString(source);
-      final objectList = jsonString.decodedValueAsObjectList(User.fromJson);
+      final objectList = jsonString.decodeAsObjectList(User.fromJson);
       // check
       expect(objectList, isNotNull);
       expect(objectList, hasLength(isNonZero));

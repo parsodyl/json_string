@@ -7,7 +7,7 @@ void main() {
   if (jsonString == null) {
     print("Bad source!");
   }
-  final user1 = jsonString.decodedValueAsObject(User.fromJson);
+  final user1 = jsonString.decodeAsObject(User.fromJson);
   final user2 = User(username: 'clara_brothers', password: 'asdfgh');
   final userList = [user1, user2];
 
@@ -15,7 +15,7 @@ void main() {
   final internalSource = jsonString.source;
   print(internalSource);
 
-  final decodedList = jsonString.decodedValueAsObjectList(User.fromJson);
+  final decodedList = jsonString.decodeAsObjectList(User.fromJson);
   print(ListEquality().equals(decodedList, userList)); // true
 }
 

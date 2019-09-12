@@ -35,25 +35,25 @@ void main() {
     // teardown
   });
   test(
-    'fail test: .decodedValueAsObject() with null input',
+    'fail test: .decodeAsObject() with null input',
     () {
       // prepare input
       final source = '{"username":"john_doe","password":"querty"}';
       // execute
       final jsonString = JsonString(source);
-      final testCall = () => jsonString.decodedValueAsObject(null);
+      final testCall = () => jsonString.decodeAsObject(null);
       // check
       expect(testCall, throwsA(TypeMatcher<AssertionError>()));
     },
   );
   test(
-    'success test: .decodedValueAsObject() with a proper decoder',
+    'success test: .decodeAsObject() with a proper decoder',
     () {
       // prepare input
       final source = '{"username":"john_doe","password":"querty"}';
       // execute
       final jsonString = JsonString(source);
-      final resultObject = jsonString.decodedValueAsObject(User.fromJson);
+      final resultObject = jsonString.decodeAsObject(User.fromJson);
 
       // check
       expect(resultObject, isNotNull);
@@ -67,7 +67,7 @@ void main() {
       final source = '["john_doe","querty"]';
       // execute
       final jsonString = JsonString(source);
-      final testCall = () => jsonString.decodedValueAsObject(User.fromJson);
+      final testCall = () => jsonString.decodeAsObject(User.fromJson);
       // check
       expect(testCall, throwsA(TypeMatcher<JsonDecodingError>()));
     },

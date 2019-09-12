@@ -28,58 +28,10 @@ void main() {
       final source = '[]';
       // execute
       final jsonString = JsonString(source);
-      final d = jsonString.decodedValue;  
+      final d = jsonString.decodedValue;
       // check
       expect(d, TypeMatcher<List<dynamic>>());
       expect(d as List<dynamic>, hasLength(isZero));
-    },
-  );
-  test(
-    'success test: decode a single int value',
-    () {
-      // prepare input
-      final source = '42';
-      // execute
-      final jsonString = JsonString(source);
-      final d = jsonString.decodedValue;  
-      // check
-      expect(d, TypeMatcher<int>());
-    },
-  );
-  test(
-    'success test: decode a single double value',
-    () {
-      // prepare input
-      final source = '42.0';
-      // execute
-      final jsonString = JsonString(source);
-      final d = jsonString.decodedValue;  
-      // check
-      expect(d, TypeMatcher<double>());
-    },
-  );
-  test(
-    'success test: decode a single string value',
-    () {
-      // prepare input
-      final source = '"Hello World!"';
-      // execute
-      final jsonString = JsonString(source);
-      final d = jsonString.decodedValue;  
-      // check
-      expect(d, TypeMatcher<String>());
-    },
-  );
-  test(
-    'success test: decode a single boolean value',
-    () {
-      // prepare input
-      final source = 'false';
-      // execute
-      final jsonString = JsonString(source);
-      final d = jsonString.decodedValue;  
-      // check
-      expect(d, TypeMatcher<bool>());
     },
   );
   test(
@@ -93,7 +45,7 @@ void main() {
       final source = '{"$key0":"$value0","$key1":"$value1"}';
       // execute
       final jsonString = JsonString(source);
-      final d = jsonString.decodedValue;  
+      final d = jsonString.decodedValue;
       // check
       expect(d, TypeMatcher<Map<String, dynamic>>());
       expect(d[key0], equals(value0));
@@ -109,7 +61,7 @@ void main() {
       final source = '["$value0","$value1"]';
       // execute
       final jsonString = JsonString(source);
-      final d = jsonString.decodedValue;  
+      final d = jsonString.decodedValue;
       // check
       expect(d, TypeMatcher<List<dynamic>>());
       expect(d[0], equals(value0));
