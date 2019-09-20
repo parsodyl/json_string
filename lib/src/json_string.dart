@@ -46,9 +46,9 @@ class JsonString {
 
   /// Constructs a [JsonString] converting [value] into a valid JSON.
   ///
-  /// If [value] contains objects that are not directly encodable to
-  /// a valid JSON, the [encoder] function is used to convert it to
-  /// an object that must be directly encodable.
+  /// Attention: this is just a wrapper around the Dart built-in
+  /// function `json.encode()`, you should use this in special cases only.
+  /// Check the other encoding functions for more common usages.
   JsonString.encode(Object value, {encoder(object)})
       : this.source = _encodeSafely(value, encoder: encoder),
         this._cachedValue = null;
@@ -83,6 +83,16 @@ class JsonString {
     assert(list != null);
     final dynamicList = disassembleObjectList<T>(list, builder: encoder);
     return JsonString.encode(dynamicList);
+  }
+
+  /// Constructs a [JsonString] converting [value] into a valid JSON
+  /// primitive value.
+  ///
+  /// [T] must be a primitive type (int, double, bool or String).
+  static JsonString encodePrimitiveValue<T>(T value) {
+    assert(value != null);
+    final primitiveValue = checkPrimitiveValue(value);
+    return JsonString.encode(primitiveValue);
   }
 
   // <<decoders>>

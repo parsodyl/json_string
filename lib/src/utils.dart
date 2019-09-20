@@ -2,6 +2,15 @@ import 'package:json_string/src/errors.dart';
 import 'package:json_string/src/functions.dart';
 import 'package:json_string/src/jsonable.dart';
 
+T checkPrimitiveValue<T>(T value) {
+  assert(value != null);
+  if (!isPrimitiveType<T>()) {
+    throw JsonEncodingError(
+        "type '${T.toString()}' is not a JSON primitive type");
+  }
+  return value;
+}
+
 Map<String, dynamic> disassembleObject<T extends Object>(T value,
     {JsonObjectEncoder<T> builder}) {
   assert(value != null);
@@ -13,13 +22,6 @@ Map<String, dynamic> disassembleObject<T extends Object>(T value,
   }
   throw JsonEncodingError(
       "this is not a Jsonable object: provide a valid encoder.");
-}
-
-T assembleObject<T extends Object>(
-    Map<String, dynamic> jsonObject, JsonObjectDecoder<T> builder) {
-  assert(jsonObject != null);
-  assert(builder != null);
-  return builder(jsonObject);
 }
 
 List<dynamic> disassemblePrimitiveList<T>(List<T> value) {
@@ -42,6 +44,13 @@ List<dynamic> disassembleObjectList<T extends Object>(List<T> value,
     }
     return disassembleObject<T>(e, builder: builder);
   }).toList();
+}
+
+T assembleObject<T extends Object>(
+    Map<String, dynamic> jsonObject, JsonObjectDecoder<T> builder) {
+  assert(jsonObject != null);
+  assert(builder != null);
+  return builder(jsonObject);
 }
 
 List<T> assembleObjectList<T extends Object>(
