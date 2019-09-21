@@ -141,7 +141,8 @@ class JsonString {
   ///
   /// The JSON data must be a JSON primitive value and [T] must be a primitive
   ///  type (int, double, bool or String) or it will throw a [JsonDecodingError].
-  T decodeAsPrimitiveValue<T>() => castToPrimitiveValue<T>(this.decodedValue);
+  T decodeAsPrimitiveValue<T>() =>
+      castToPrimitiveTypedValue<T>(this.decodedValue);
 
   // <<standard methods>>
 
