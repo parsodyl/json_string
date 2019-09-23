@@ -100,7 +100,15 @@ List<T> castToPrimitiveList<T>(dynamic value) {
   return List<T>.from(jsonList);
 }
 
-T castToPrimitiveValue<T>(dynamic value) {
+dynamic castToPrimitiveValue(dynamic value) {
+  if (!isPrimitiveValue(value)) {
+    throw JsonDecodingError(
+        "value '${value.toString()}' is not a primitive value");
+  }
+  return value;
+}
+
+T castToPrimitiveTypedValue<T>(dynamic value) {
   if (!isPrimitiveType<T>()) {
     throw JsonDecodingError(
         "type '${T.toString()}' is not a JSON primitive type");
@@ -124,6 +132,10 @@ bool isMap(dynamic node) {
 
 bool isList(dynamic node) {
   return node is List<dynamic>;
+}
+
+bool isPrimitiveValue(dynamic node) {
+  return node is bool || node is String || node is int || node is double;
 }
 
 bool isTypedList<T>(dynamic node) {

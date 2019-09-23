@@ -14,10 +14,13 @@ class JsonString {
   /// Constructs a [JsonString] if [source] is a valid JSON.
   ///
   /// If not, it throws a [JsonFormatException].
+  ///
+  /// If the optional [enableCache] parameter is set to `true`,
+  /// a cache of the decoded value is provided.
   factory JsonString(String source, {bool enableCache = false}) {
     assert(source != null);
     try {
-      final decodedSource = _decode(source);
+      final decodedSource = _decodeSafely(source);
       final cachedValue = enableCache ? decodedSource : null;
       return JsonString._(_encode(decodedSource), cachedValue);
     } on FormatException catch (e) {
@@ -31,10 +34,13 @@ class JsonString {
   /// Constructs a [JsonString] if [source] is a valid JSON.
   ///
   /// If not, it returns [null].
+  ///
+  /// If the optional [enableCache] parameter is set to `true`,
+  /// a cache of the decoded value is provided.
   factory JsonString.orNull(String source, {bool enableCache = false}) {
     assert(source != null);
     try {
-      final decodedSource = _decode(source);
+      final decodedSource = _decodeSafely(source);
       final cachedValue = enableCache ? decodedSource : null;
       return JsonString._(_encode(decodedSource), cachedValue);
     } catch (_) {
@@ -95,13 +101,13 @@ class JsonString {
     return JsonString.encode(primitiveValue);
   }
 
-  // <<decoders>>
+  // <<decoding properties>>
 
   /// The JSON data directly decoded as a dynamic type.
   ///
   /// (this is the most general one.)
   dynamic get decodedValue =>
-      (_cachedValue != null) ? _cachedValue : _decode(this.source);
+      (_cachedValue != null) ? _cachedValue : _decodeSafely(this.source);
 
   /// The JSON data decoded as an instance of [Map<String, dynamic>].
   ///
@@ -114,6 +120,8 @@ class JsonString {
   /// The JSON data must be a JSON list or it will throw
   /// a [JsonDecodingError].
   List<dynamic> get decodedValueAsList => castToList(this.decodedValue);
+
+  // <<decoding methods>>
 
   /// Returns the JSON data decoded as an instance of [T extends Object].
   ///
@@ -169,12 +177,6 @@ class JsonString {
 
   const JsonString._(this.source, this._cachedValue);
 
-  static Object _decode(String source,
-      {Function(Object key, Object value) decoder}) {
-    assert(source != null);
-    return json.decode(source, reviver: decoder);
-  }
-
   static String _encode(Object value, {Function(Object) encoder}) {
     return json.encode(value, toEncodable: encoder);
   }
@@ -185,6 +187,16 @@ class JsonString {
       return json.encode(value, toEncodable: encoder);
     } catch (e) {
       throw JsonEncodingError(e);
+    }
+  }
+
+  static Object _decodeSafely(String source,
+      {Function(Object key, Object value) decoder}) {
+    assert(source != null);
+    try {
+      return json.decode(source, reviver: decoder);
+    } catch (e) {
+      throw JsonDecodingError(e);
     }
   }
 }

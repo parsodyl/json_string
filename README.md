@@ -7,7 +7,7 @@ A simple and lightweight JSON data container for Dart and Flutter.
 ## Why?
 
 The Dart language doesn't have an official way to mark an object as a piece of JSON data. You have to carry it in a simple string and then use `dart:convert` when you need the decoded value. 
-Furthermore, since [JsonCodec](https://api.dartlang.org/stable/2.5.0/dart-convert/JsonCodec-class.html) is designed for general purpose, encoding and decoding operations result completely type-unsafe. 
+Furthermore, since [JsonCodec](https://api.dartlang.org/stable/dart-convert/JsonCodec-class.html) is designed for general purpose, encoding and decoding operations result completely type-unsafe.
 **json_string** not only keeps your JSON data as light as possible, but also encapsulates `dart:convert` directly into it, offering you better [soundness](https://dart.dev/guides/language/sound-dart) and a much clearer syntax.
 
 ## Configure
@@ -187,11 +187,11 @@ final jsonString = JsonString.encodePrimitiveList(amIaGenius);
 ### Decoding
 
 It's time to access the Dart counterpart of some JSON data. 
-Here json_string helps you with several solutions. You have **properties** for a simple general access and **methods** for more finer decoding operations.
+Here json_string helps you with several solutions. You have **properties** for simple general access and **methods** for some more finer decoding operations.
 
 #### Properties
 
-When you construct a JsonString object, it checks for you if the source represents a valid piece of JSON data, but it doesn’t tell you **what kind of data** it contains.
+When you construct a JsonString object, it checks on your behalf if the source represents a valid piece of JSON data, but it doesn’t tell you **what kind of data** it contains.
 If you don’t know the expected type or you simply don’t care about that, just access the `decodedValue` property. It works every time: 
 
 ```dart
@@ -294,6 +294,36 @@ final pi = jsonString.decodeAsPrimitiveValue<double>();
 // boolean value decoding
 final jsonString = JsonString('false');
 final amIaGenius = jsonString.decodeAsPrimitiveValue<bool>();
+```
+### Advanced
+
+Here's a list of some advanced available options.
+
+#### Complex encoding
+
+If you need to encode complicated structures, you can use `JsonString.encode()` which is just a wrapper around the built-in `dart:convert` [encode()](https://api.dartlang.org/stable/dart-convert/JsonCodec/encode.html) method:
+
+```dart
+const data = {
+  "key0": [1, 2, 3],
+  "key1": 123,
+  "key2": "123",
+};
+try {
+  final jsonString = JsonString.encode(data);
+  // ...
+} on JsonEncodingError catch (e) {
+  print('${data.toString()} is impossible to encode : $e');
+}
+```
+
+#### Caching
+
+Decoding operations may take time and be expensive in terms of computing resources. When you construct a JsonString object, you can specify a `enableCache` flag, which keeps a copy of the `decodedValue` property. This makes every usage of decoding properties or methods **way faster**. The only drawback to this is the necessary memory occupation:
+
+```dart
+final jsonString = JsonString(source, enableCache: true);
+final decodedMap = jsonString.decodedValueAsMap; // immediate access
 ```
 
 ## Contribute
