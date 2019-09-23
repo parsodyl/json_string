@@ -1,3 +1,16 @@
+## 1.0.0
+
+**Breaking:**
+
+- `decodedValueAsObject()` is now called **decodeAsObject()**
+- `decodedValueAsObjectList()` is now called **decodeAsObjectList()**
+- `decodedValueAsPrimitiveList()` is now called **decodeAsPrimitiveList()**
+
+**Non-breaking:**
+
+- Added **decodeAsPrimitiveValue()**
+- `encode()` now throws an instance of **JsonEncodingError** in case of error
+
 ## 0.2.0
 
 * New decoding options added.

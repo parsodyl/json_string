@@ -16,7 +16,7 @@ Add `json_string` to `pubspec.yaml` under the `dependencies` subsection.
 
 ```yaml
 dependencies:
-  json_string: ^0.2.0
+  json_string: ^1.0.0
 ```
 ## Install
 
@@ -187,7 +187,7 @@ final jsonString = JsonString.encodePrimitiveList(amIaGenius);
 ### Decoding
 
 It's time to access the Dart counterpart of some JSON data. 
-Here json_string helps you with several solutions. You have **properties** for simple general access and **methods** for some more finer decoding operations.
+Here json_string helps you with several solutions. You have **properties** for simple general access and **methods** for some finer decoding operations.
 
 #### Properties
 
@@ -319,7 +319,7 @@ try {
 
 #### Caching
 
-Decoding operations may take time and be expensive in terms of computing resources. When you construct a JsonString object, you can specify a `enableCache` flag, which keeps a copy of the `decodedValue` property. This makes every usage of decoding properties or methods **way faster**. The only drawback to this is the necessary memory occupation:
+Decoding operations may take time and be expensive in terms of computing resources. When you construct a JsonString object, you can specify an `enableCache` flag, which keeps a copy of the `decodedValue` property. This makes every usage of decoding properties or methods **way faster**. The only drawback to this is the necessary memory occupation:
 
 ```dart
 final jsonString = JsonString(source, enableCache: true);
