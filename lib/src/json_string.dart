@@ -6,7 +6,7 @@ import 'package:json_string/src/utils.dart';
 
 /// A single piece of JSON data.
 class JsonString {
-  /// The JSON data source reppresentation for this object.
+  /// The JSON data source representation for this object.
   final String source;
 
   // <<constructors>>
@@ -27,7 +27,7 @@ class JsonString {
       throw JsonFormatException.fromParent(e);
     } catch (_) {
       throw JsonFormatException(
-          "This source does not rapresent a valid json.", source);
+          "This source does not represent a valid JSON.", source);
     }
   }
 

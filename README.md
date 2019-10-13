@@ -192,7 +192,7 @@ Here json_string helps you with several solutions. You have **properties** for s
 #### Properties
 
 When you construct a JsonString object, it checks on your behalf if the source represents a valid piece of JSON data, but it doesn’t tell you **what kind of data** it contains.
-If you don’t know the expected type or you simply don’t care about that, just access the `decodedValue` property. It works every time: 
+If you don’t know the expected type or you simply don’t care about it, just access the `decodedValue` property. It works every time: 
 
 ```dart
 // any type
@@ -214,7 +214,7 @@ try {
 try {
     final decodedList = jsonString.decodedValueAsList;
     print(decodedList.runtimeType); // List<dynamic>
-} on JsonEncodingError catch (e) {
+} on JsonDecodingError catch (e) {
     throw "This is not a list.";
 }
 ```
@@ -304,11 +304,11 @@ Here's a list of some advanced available options.
 If you need to encode complicated structures, you can use `JsonString.encode()` which is just a wrapper around the built-in `dart:convert` [encode()](https://api.dartlang.org/stable/dart-convert/JsonCodec/encode.html) method:
 
 ```dart
-const data = {
+const data = [{
   "key0": [1, 2, 3],
   "key1": 123,
   "key2": "123",
-};
+}, "value1", false];
 try {
   final jsonString = JsonString.encode(data);
   // ...
