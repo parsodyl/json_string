@@ -1,3 +1,7 @@
+## 1.0.1
+
+* Documentation corrected.
+
 ## 1.0.0
 
 **Breaking:**
