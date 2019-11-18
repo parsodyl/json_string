@@ -59,6 +59,25 @@ class JsonString {
       : this.source = _encodeSafely(value, encoder: encoder),
         this._cachedValue = null;
 
+  /// Constructs a [JsonString] converting [value] into a valid JSON
+  /// primitive value.
+  ///
+  /// [T] must be a primitive type (int, double, bool or String).
+  static JsonString encodePrimitiveValue<T>(T value) {
+    assert(value != null);
+    final primitiveValue = checkPrimitiveValue(value);
+    return JsonString.encode(primitiveValue);
+  }
+
+  /// Constructs a [JsonString] converting [list] into a valid JSON List.
+  ///
+  /// [T] must be a primitive type (int, double, bool or String).
+  static JsonString encodePrimitiveList<T>(List<T> list) {
+    assert(list != null);
+    final dynamicList = disassemblePrimitiveList<T>(list);
+    return JsonString.encode(dynamicList);
+  }
+
   /// Constructs a [JsonString] converting [value] into a
   /// valid JSON Object.
   ///
@@ -72,15 +91,6 @@ class JsonString {
     return JsonString.encode(dynamicMap);
   }
 
-  /// Constructs a [JsonString] converting [list] into a valid JSON List.
-  ///
-  /// [T] must be a primitive type (int, double, bool or String).
-  static JsonString encodePrimitiveList<T>(List<T> list) {
-    assert(list != null);
-    final dynamicList = disassemblePrimitiveList<T>(list);
-    return JsonString.encode(dynamicList);
-  }
-
   /// Constructs a [JsonString] converting [list] into a valid JSON list.
   ///
   /// [T] represents a JSON Object, see `.encodeObject()` for reference.
@@ -89,16 +99,6 @@ class JsonString {
     assert(list != null);
     final dynamicList = disassembleObjectList<T>(list, builder: encoder);
     return JsonString.encode(dynamicList);
-  }
-
-  /// Constructs a [JsonString] converting [value] into a valid JSON
-  /// primitive value.
-  ///
-  /// [T] must be a primitive type (int, double, bool or String).
-  static JsonString encodePrimitiveValue<T>(T value) {
-    assert(value != null);
-    final primitiveValue = checkPrimitiveValue(value);
-    return JsonString.encode(primitiveValue);
   }
 
   // <<decoding properties>>
@@ -123,12 +123,12 @@ class JsonString {
 
   // <<decoding methods>>
 
-  /// Returns the JSON data decoded as an instance of [T extends Object].
+  /// Returns the JSON data decoded as an instance of [T].
   ///
-  /// The JSON data must be a JSON object or it will throw
-  /// a [JsonDecodingError].
-  T decodeAsObject<T extends Object>(JsonObjectDecoder<T> decoder) =>
-      assembleObject<T>(this.decodedValueAsMap, decoder);
+  /// The JSON data must be a JSON primitive value and [T] must be a primitive
+  ///  type (int, double, bool or String) or it will throw a [JsonDecodingError].
+  T decodeAsPrimitiveValue<T>() =>
+      castToPrimitiveTypedValue<T>(this.decodedValue);
 
   /// Returns the JSON data decoded as an instance of [List<T>].
   ///
@@ -138,19 +138,19 @@ class JsonString {
   List<T> decodeAsPrimitiveList<T>() =>
       castToPrimitiveList<T>(this.decodedValue);
 
+  /// Returns the JSON data decoded as an instance of [T extends Object].
+  ///
+  /// The JSON data must be a JSON object or it will throw
+  /// a [JsonDecodingError].
+  T decodeAsObject<T extends Object>(JsonObjectDecoder<T> decoder) =>
+      assembleObject<T>(this.decodedValueAsMap, decoder);
+
   /// Returns the JSON data decoded as an instance of [List<T extends Object>].
   ///
   /// The JSON data must be a list of JSON objects or it
   /// will throw a [JsonDecodingError].
   List<T> decodeAsObjectList<T extends Object>(JsonObjectDecoder<T> decoder) =>
       assembleObjectList<T>(this.decodedValueAsList, decoder);
-
-  /// Returns the JSON data decoded as an instance of [T].
-  ///
-  /// The JSON data must be a JSON primitive value and [T] must be a primitive
-  ///  type (int, double, bool or String) or it will throw a [JsonDecodingError].
-  T decodeAsPrimitiveValue<T>() =>
-      castToPrimitiveTypedValue<T>(this.decodedValue);
 
   // <<standard methods>>
 

@@ -18,7 +18,7 @@ Map<String, dynamic> disassembleObject<T extends Object>(T value,
   if (builder != null) {
     return builder(dartObject);
   } else if (dartObject is Jsonable) {
-    return dartObject.toJson();
+    return dartObject.toMap();
   }
   throw JsonEncodingError(
       "this is not a Jsonable object: provide a valid encoder.");
