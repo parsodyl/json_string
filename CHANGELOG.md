@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Clarified `Jsonable` mixin usage (non-breaking).
+
 ## 1.0.1
 
 * Documentation corrected.
