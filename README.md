@@ -178,11 +178,11 @@ final jsonString = JsonString.encodePrimitiveValue(message);
 
 // double
 final pi = 3.14159;
-final jsonString = JsonString.encodePrimitiveList(pi);
+final jsonString = JsonString.encodePrimitiveValue(pi);
 
 // boolean
 final amIaGenius = false;
-final jsonString = JsonString.encodePrimitiveList(amIaGenius);
+final jsonString = JsonString.encodePrimitiveValue(amIaGenius);
 ```
 ### Decoding
 
