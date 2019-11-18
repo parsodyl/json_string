@@ -1,6 +1,6 @@
 # json_string
 
-[![Pub](https://img.shields.io/pub/v/json_string.svg)](https://pub.dartlang.org/packages/json_string)
+[![Dart CI](https://github.com/parsodyl/json_string/workflows/Dart%20CI/badge.svg)](https://github.com/parsodyl/json_string/actions) [![Pub](https://img.shields.io/pub/v/json_string.svg)](https://pub.dartlang.org/packages/json_string)
 
 A simple and lightweight JSON data container for Dart and Flutter.
 
