@@ -192,7 +192,6 @@ class JsonString {
 
   static Object _decodeSafely(String source,
       {Function(Object key, Object value) decoder}) {
-    assert(source != null);
     try {
       return json.decode(source, reviver: decoder);
     } catch (e) {
