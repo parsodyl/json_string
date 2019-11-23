@@ -156,6 +156,30 @@ void main() {
         expect(testCall, throwsA(TypeMatcher<JsonEncodingError>()));
       },
     );
+    test(
+      'success test: try to encode a null filled list #1 (implicit type)',
+      () {
+        // prepare input
+        final data = [null, null, null, null, null];
+        // execute
+        final jsonString = JsonString.encodeObjectList(data);
+        // check
+        expect(jsonString, isNotNull);
+        expect(jsonString, TypeMatcher<JsonString>());
+      },
+    );
+    test(
+      'seccess test: try to encode a null filled list #2 (explicit type)',
+      () {
+        // prepare input
+        final data = [null, null, null, null, null];
+        // execute
+        final jsonString = JsonString.encodeObjectList<User>(data);
+        // check
+        expect(jsonString, isNotNull);
+        expect(jsonString, TypeMatcher<JsonString>());
+      },
+    );
   });
 }
 

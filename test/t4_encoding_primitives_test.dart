@@ -135,14 +135,15 @@ void main() {
       },
     );
     test(
-      'fail test: try to encode a null filled list #1 (implicit type)',
+      'success test: try to encode a null filled list #1 (implicit type)',
       () {
         // prepare input
         final data = [null, null, null, null, null];
         // execute
-        final testCall = () => JsonString.encodePrimitiveList(data);
+        final jsonString = JsonString.encodePrimitiveList(data);
         // check
-        expect(testCall, throwsA(TypeMatcher<JsonEncodingError>()));
+        expect(jsonString, isNotNull);
+        expect(jsonString, TypeMatcher<JsonString>());
       },
     );
     test(

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:json_string/src/errors.dart';
 import 'package:json_string/src/functions.dart';
 import 'package:json_string/src/utils.dart';
+import 'package:json_util/json_util.dart';
 
 /// A single piece of JSON data.
 class JsonString {
@@ -20,9 +20,7 @@ class JsonString {
   factory JsonString(String source, {bool enableCache = false}) {
     assert(source != null);
     try {
-      final decodedSource = _decodeSafely(source);
-      final cachedValue = enableCache ? decodedSource : null;
-      return JsonString._(_encode(decodedSource), cachedValue);
+      return _constructJsonString(source, enableCache);
     } on FormatException catch (e) {
       throw JsonFormatException.fromParent(e);
     } catch (_) {
@@ -40,9 +38,7 @@ class JsonString {
   factory JsonString.orNull(String source, {bool enableCache = false}) {
     assert(source != null);
     try {
-      final decodedSource = _decodeSafely(source);
-      final cachedValue = enableCache ? decodedSource : null;
-      return JsonString._(_encode(decodedSource), cachedValue);
+      return _constructJsonString(source, enableCache);
     } catch (_) {
       return null;
     }
@@ -65,8 +61,10 @@ class JsonString {
   /// [T] must be a primitive type (int, double, bool or String).
   static JsonString encodePrimitiveValue<T>(T value) {
     assert(value != null);
-    final primitiveValue = checkPrimitiveValue(value);
-    return JsonString.encode(primitiveValue);
+    return wrapEncodingOperation(() {
+      final encodable = EncodableValue.fromPrimitiveValue<T>(value);
+      return JsonString._(encodable.encode(), null);
+    });
   }
 
   /// Constructs a [JsonString] converting [list] into a valid JSON List.
@@ -74,8 +72,10 @@ class JsonString {
   /// [T] must be a primitive type (int, double, bool or String).
   static JsonString encodePrimitiveList<T>(List<T> list) {
     assert(list != null);
-    final dynamicList = disassemblePrimitiveList<T>(list);
-    return JsonString.encode(dynamicList);
+    return wrapEncodingOperation(() {
+      final encodable = EncodableValue.fromPrimitiveList<T>(list);
+      return JsonString._(encodable.encode(), null);
+    });
   }
 
   /// Constructs a [JsonString] converting [value] into a
@@ -87,8 +87,11 @@ class JsonString {
   static JsonString encodeObject<T extends Object>(T value,
       {JsonObjectEncoder<T> encoder}) {
     assert(value != null);
-    final dynamicMap = disassembleObject<T>(value, builder: encoder);
-    return JsonString.encode(dynamicMap);
+    return wrapEncodingOperation(() {
+      final dyMap = disassembleObject<T>(value, builder: encoder);
+      final encodable = EncodableValue.map(dyMap);
+      return JsonString._(encodable.encode(), null);
+    });
   }
 
   /// Constructs a [JsonString] converting [list] into a valid JSON list.
@@ -97,8 +100,11 @@ class JsonString {
   static JsonString encodeObjectList<T extends Object>(List<T> list,
       {JsonObjectEncoder<T> encoder}) {
     assert(list != null);
-    final dynamicList = disassembleObjectList<T>(list, builder: encoder);
-    return JsonString.encode(dynamicList);
+    return wrapEncodingOperation(() {
+      final dyList = disassembleObjectList<T>(list, builder: encoder);
+      final encodable = EncodableValue.list(dyList);
+      return JsonString._(encodable.encode(), null);
+    });
   }
 
   // <<decoding properties>>
@@ -106,20 +112,21 @@ class JsonString {
   /// The JSON data directly decoded as a dynamic type.
   ///
   /// (this is the most general one.)
-  dynamic get decodedValue =>
-      (_cachedValue != null) ? _cachedValue : _decodeSafely(this.source);
+  dynamic get decodedValue => wrapDecodingOperation(() => _decodedValue.value);
 
   /// The JSON data decoded as an instance of [Map<String, dynamic>].
   ///
   /// The JSON data must be a JSON object or it will throw
   /// a [JsonDecodingError].
-  Map<String, dynamic> get decodedValueAsMap => castToMap(this.decodedValue);
+  Map<String, dynamic> get decodedValueAsMap =>
+      wrapDecodingOperation(() => _decodedValue.asMap());
 
   /// The JSON data decoded as an instance of [List<dynamic>].
   ///
   /// The JSON data must be a JSON list or it will throw
   /// a [JsonDecodingError].
-  List<dynamic> get decodedValueAsList => castToList(this.decodedValue);
+  List<dynamic> get decodedValueAsList =>
+      wrapDecodingOperation(() => _decodedValue.asList());
 
   // <<decoding methods>>
 
@@ -128,7 +135,7 @@ class JsonString {
   /// The JSON data must be a JSON primitive value and [T] must be a primitive
   ///  type (int, double, bool or String) or it will throw a [JsonDecodingError].
   T decodeAsPrimitiveValue<T>() =>
-      castToPrimitiveTypedValue<T>(this.decodedValue);
+      wrapDecodingOperation(() => _decodedValue.asPrimitiveValue<T>());
 
   /// Returns the JSON data decoded as an instance of [List<T>].
   ///
@@ -136,21 +143,23 @@ class JsonString {
   /// be a primitive type (int, double, bool or String) or it will throw
   /// a [JsonDecodingError].
   List<T> decodeAsPrimitiveList<T>() =>
-      castToPrimitiveList<T>(this.decodedValue);
+      wrapDecodingOperation(() => _decodedValue.asPrimitiveList<T>());
 
   /// Returns the JSON data decoded as an instance of [T extends Object].
   ///
   /// The JSON data must be a JSON object or it will throw
   /// a [JsonDecodingError].
   T decodeAsObject<T extends Object>(JsonObjectDecoder<T> decoder) =>
-      assembleObject<T>(this.decodedValueAsMap, decoder);
+      wrapDecodingOperation(
+          () => _decodedValue.asObject(decoder, skipIfNull: true));
 
   /// Returns the JSON data decoded as an instance of [List<T extends Object>].
   ///
   /// The JSON data must be a list of JSON objects or it
   /// will throw a [JsonDecodingError].
   List<T> decodeAsObjectList<T extends Object>(JsonObjectDecoder<T> decoder) =>
-      assembleObjectList<T>(this.decodedValueAsList, decoder);
+      wrapDecodingOperation(
+          () => _decodedValue.asObjectList(decoder, skipNullValues: true));
 
   // <<standard methods>>
 
@@ -171,9 +180,18 @@ class JsonString {
 
   // <<private fields>>
 
-  final dynamic _cachedValue;
+  final DecodedValue _cachedValue;
+
+  DecodedValue get _decodedValue =>
+      (_cachedValue != null) ? _cachedValue : _getDecodedValue(this.source);
 
   // <<private methods>>
+
+  static JsonString _constructJsonString(String source, bool enableCache) {
+    final decodedSource = _getDecodedValue(source);
+    final cachedValue = enableCache ? decodedSource : null;
+    return JsonString._(_encode(decodedSource.value), cachedValue);
+  }
 
   const JsonString._(this.source, this._cachedValue);
 
@@ -184,17 +202,16 @@ class JsonString {
   static String _encodeSafely(Object value, {Function(Object) encoder}) {
     assert(value != null);
     try {
-      return json.encode(value, toEncodable: encoder);
+      return _encode(value, encoder: encoder);
     } catch (e) {
       throw JsonEncodingError(e);
     }
   }
 
-  static Object _decodeSafely(String source,
-      {Function(Object key, Object value) decoder}) {
+  static DecodedValue _getDecodedValue(String source) {
     assert(source != null);
     try {
-      return json.decode(source, reviver: decoder);
+      return DecodedValue.from(source);
     } catch (e) {
       throw JsonDecodingError(e);
     }
