@@ -88,8 +88,8 @@ class JsonString {
       {JsonObjectEncoder<T> encoder}) {
     assert(value != null);
     return wrapEncodingOperation(() {
-      final dyMap = disassembleObject<T>(value, builder: encoder);
-      final encodable = EncodableValue.map(dyMap);
+      final dynamicMap = disassembleObject<T>(value, builder: encoder);
+      final encodable = EncodableValue.map(dynamicMap);
       return JsonString._(encodable.encode(), null);
     });
   }
@@ -101,8 +101,8 @@ class JsonString {
       {JsonObjectEncoder<T> encoder}) {
     assert(list != null);
     return wrapEncodingOperation(() {
-      final dyList = disassembleObjectList<T>(list, builder: encoder);
-      final encodable = EncodableValue.list(dyList);
+      final dynamicList = disassembleObjectList<T>(list, builder: encoder);
+      final encodable = EncodableValue.list(dynamicList);
       return JsonString._(encodable.encode(), null);
     });
   }

@@ -4,7 +4,6 @@ import 'package:json_util/json_util.dart';
 
 Map<String, dynamic> disassembleObject<T extends Object>(T value,
     {JsonObjectEncoder<T> builder}) {
-  assert(value != null);
   final T dartObject = value;
   if (builder != null) {
     return builder(dartObject);
@@ -17,7 +16,6 @@ Map<String, dynamic> disassembleObject<T extends Object>(T value,
 
 List<dynamic> disassembleObjectList<T extends Object>(List<T> value,
     {JsonObjectEncoder<T> builder}) {
-  assert(value != null);
   final List<T> dartObjectList = value;
   return dartObjectList.map((e) {
     if (e == null) {
