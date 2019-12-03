@@ -12,7 +12,7 @@ void main() {
         final jsonString = JsonString(source);
         final testCall = () => jsonString.decodeAsObject(null);
         // check
-        expect(testCall, throwsA(TypeMatcher<AssertionError>()));
+        expect(testCall, throwsA(TypeMatcher<JsonDecodingError>()));
       },
     );
     test(
@@ -42,7 +42,7 @@ void main() {
       },
     );
   });
-  group('Object-list decod method', () {
+  group('Object-list decode method', () {
     test(
       'fail test: .decodeAsObjectList() with null input',
       () {
@@ -52,7 +52,7 @@ void main() {
         final jsonString = JsonString(source);
         final testCall = () => jsonString.decodeAsObjectList(null);
         // check
-        expect(testCall, throwsA(TypeMatcher<AssertionError>()));
+        expect(testCall, throwsA(TypeMatcher<JsonDecodingError>()));
       },
     );
     test(
