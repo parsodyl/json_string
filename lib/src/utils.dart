@@ -29,18 +29,12 @@ Map<String, dynamic> normalizeJsonObject(Object jsonObject) {
   return jsonObject as Map<String, dynamic>;
 }
 
-T wrapDecodingOperation<T>(T exec()) {
+T wrapJsonUtilOperation<T>(T exec()) {
   try {
     return exec();
-  } on JsonUtilError catch (e) {
+  } on DecodedValueError catch (e) {
     throw JsonDecodingError(e);
-  }
-}
-
-T wrapEncodingOperation<T>(T exec()) {
-  try {
-    return exec();
-  } on JsonUtilError catch (e) {
+  } on EncodableValueError catch (e) {
     throw JsonEncodingError(e);
   }
 }
