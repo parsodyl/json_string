@@ -193,7 +193,6 @@ class JsonString {
   }
 
   static String _encodeSafely(Object value, {Function(Object) encoder}) {
-    assert(value != null);
     try {
       return _encode(value, encoder: encoder);
     } catch (e) {

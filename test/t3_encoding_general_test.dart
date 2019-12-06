@@ -4,14 +4,16 @@ import 'package:test/test.dart';
 void main() {
   group('Built-in encode method, ', () {
     test(
-      'fail test: call encode() with null imput',
+      'success test: call encode() with null input',
       () {
         // prepare input
         final data = null;
         // execute
-        final testCall = () => JsonString.encode(data);
+        final jsonString = JsonString.encode(data);
         // check
-        expect(testCall, throwsA(TypeMatcher<AssertionError>()));
+        expect(jsonString, isNotNull);
+        expect(jsonString, TypeMatcher<JsonString>());
+        expect(jsonString.source, equals('null'));
       },
     );
     test(
