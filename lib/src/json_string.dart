@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:convert' as dartConvert;
 
 import 'package:json_string/src/functions.dart';
 import 'package:json_string/src/utils.dart';
@@ -171,14 +171,20 @@ class JsonString {
     return 'JsonString{source: $source}';
   }
 
+  // <<private constructor>>
+
+  const JsonString._(this.source, this._cachedValue);
+
   // <<private fields>>
 
   final DecodedValue _cachedValue;
 
+  // <<private getters>>
+
   DecodedValue get _decodedValue =>
       (_cachedValue != null) ? _cachedValue : DecodedValue.from(this.source);
 
-  // <<private methods>>
+  // <<private static methods>>
 
   static JsonString _constructJsonString(String source, bool enableCache) {
     final decodedSource = DecodedValue.from(source);
@@ -186,10 +192,8 @@ class JsonString {
     return JsonString._(_encode(decodedSource.value), cachedValue);
   }
 
-  const JsonString._(this.source, this._cachedValue);
-
   static String _encode(Object value, {Function(Object) encoder}) {
-    return json.encode(value, toEncodable: encoder);
+    return dartConvert.jsonEncode(value, toEncodable: encoder);
   }
 
   static String _encodeSafely(Object value, {Function(Object) encoder}) {
