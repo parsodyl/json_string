@@ -14,19 +14,16 @@ Map<String, dynamic> disassembleObject<T extends Object>(T value,
       "this is not a Jsonable object: provide a valid encoder.");
 }
 
-List<dynamic> disassembleObjectList<T extends Object>(List<T> value,
+List<Map<String, dynamic>> disassembleObjectList<T extends Object>(
+    List<T> value,
     {JsonObjectEncoder<T> builder}) {
   final List<T> dartObjectList = value;
   return dartObjectList.map((e) {
     if (e == null) {
-      return normalizeJsonObject(e);
+      return e as Map<String, dynamic>;
     }
     return disassembleObject<T>(e, builder: builder);
   }).toList();
-}
-
-Map<String, dynamic> normalizeJsonObject(Object jsonObject) {
-  return jsonObject as Map<String, dynamic>;
 }
 
 T wrapJsonUtilOperation<T>(T exec()) {
