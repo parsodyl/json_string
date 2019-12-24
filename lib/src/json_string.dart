@@ -1,5 +1,3 @@
-import 'dart:convert' as dart_convert;
-
 import 'package:json_string/src/functions.dart';
 import 'package:json_string/src/utils.dart';
 import 'package:json_util/json_util.dart';
@@ -194,7 +192,7 @@ class JsonString {
   }
 
   static String _encode(Object value, {Function(Object) encoder}) {
-    return dart_convert.jsonEncode(value, toEncodable: encoder);
+    return convertEncode(value, toEncodable: encoder);
   }
 
   static String _encodeSafely(Object value, {Function(Object) encoder}) {
