@@ -6,7 +6,7 @@ import 'dart:core';
 /// expected JSON format and cannot be parsed.
 class JsonFormatException extends FormatException {
   /// Default constructor.
-  JsonFormatException([String message = "", String source, int offset])
+  JsonFormatException([String message = '', String source, int offset])
       : super(message, source, offset);
 
   /// Constructs a [JsonFormatException] starting from a parent [FormatException].

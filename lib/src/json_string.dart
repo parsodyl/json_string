@@ -1,4 +1,4 @@
-import 'dart:convert' as dartConvert;
+import 'dart:convert' as dart_convert;
 
 import 'package:json_string/src/functions.dart';
 import 'package:json_string/src/utils.dart';
@@ -44,9 +44,9 @@ class JsonString {
   /// Attention: this is just a wrapper around the Dart built-in
   /// function `json.encode()`, you should use this in special cases only.
   /// Check the other encoding functions for more common usages.
-  JsonString.encode(Object value, {encoder(object)})
-      : this.source = _encodeSafely(value, encoder: encoder),
-        this._cachedValue = null;
+  JsonString.encode(Object value, {Function(Object object) encoder})
+      : source = _encodeSafely(value, encoder: encoder),
+        _cachedValue = null;
 
   /// Constructs a [JsonString] converting [value] into a valid JSON
   /// primitive value.
@@ -105,7 +105,8 @@ class JsonString {
   /// The JSON data directly decoded as a dynamic type.
   ///
   /// (this is the most general one.)
-  dynamic get decodedValue => wrapJsonUtilOperation(() => _decodedValue.value);
+  dynamic get decodedValue =>
+      wrapJsonUtilOperation<dynamic>(() => _decodedValue.value);
 
   /// The JSON data decoded as an instance of [Map<String, dynamic>].
   ///
@@ -182,7 +183,7 @@ class JsonString {
   // <<private getters>>
 
   DecodedValue get _decodedValue =>
-      (_cachedValue != null) ? _cachedValue : DecodedValue.from(this.source);
+      (_cachedValue != null) ? _cachedValue : DecodedValue.from(source);
 
   // <<private static methods>>
 
@@ -193,7 +194,7 @@ class JsonString {
   }
 
   static String _encode(Object value, {Function(Object) encoder}) {
-    return dartConvert.jsonEncode(value, toEncodable: encoder);
+    return dart_convert.jsonEncode(value, toEncodable: encoder);
   }
 
   static String _encodeSafely(Object value, {Function(Object) encoder}) {

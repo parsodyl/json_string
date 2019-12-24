@@ -2,22 +2,24 @@ import 'package:json_string/src/functions.dart';
 import 'package:json_string/src/jsonable.dart';
 import 'package:json_util/json_util.dart';
 
+/// Makes an object ready to be encoded.
 Map<String, dynamic> disassembleObject<T extends Object>(T value,
     {JsonObjectEncoder<T> builder}) {
-  final T dartObject = value;
+  final dartObject = value;
   if (builder != null) {
     return builder(dartObject);
   } else if (dartObject is Jsonable) {
     return dartObject.toMap();
   }
   throw JsonEncodingError(
-      "this is not a Jsonable object: provide a valid encoder.");
+      'this is not a Jsonable object: provide a valid encoder.');
 }
 
+/// Makes a list of objects ready to be encoded.
 List<Map<String, dynamic>> disassembleObjectList<T extends Object>(
     List<T> value,
     {JsonObjectEncoder<T> builder}) {
-  final List<T> dartObjectList = value;
+  final dartObjectList = value;
   return dartObjectList.map((e) {
     if (e == null) {
       return e as Map<String, dynamic>;
@@ -26,7 +28,8 @@ List<Map<String, dynamic>> disassembleObjectList<T extends Object>(
   }).toList();
 }
 
-T wrapJsonUtilOperation<T>(T exec()) {
+/// Wrap a generic operation from json_util library
+T wrapJsonUtilOperation<T>(T Function() exec) {
   try {
     return exec();
   } on DecodedValueError catch (e) {
