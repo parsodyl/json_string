@@ -1,0 +1,14 @@
+include: package:pedantic/analysis_options.1.9.0.yaml
+
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  exclude:
+    - 'example/**'
+    - 'test/**'
+
+linter:
+  rules:
+    public_member_api_docs: true
+    prefer_collection_literals: false

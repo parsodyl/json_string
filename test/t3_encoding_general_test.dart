@@ -4,14 +4,16 @@ import 'package:test/test.dart';
 void main() {
   group('Built-in encode method, ', () {
     test(
-      'fail test: call encode() with null imput',
+      'success test: call encode() with null input',
       () {
         // prepare input
-        final data = null;
+        final dynamic data = null;
         // execute
-        final testCall = () => JsonString.encode(data);
+        final jsonString = JsonString.encode(data);
         // check
-        expect(testCall, throwsA(TypeMatcher<AssertionError>()));
+        expect(jsonString, isNotNull);
+        expect(jsonString, TypeMatcher<JsonString>());
+        expect(jsonString.source, equals('null'));
       },
     );
     test(
@@ -19,7 +21,7 @@ void main() {
       () {
         // prepare input
         final data = {
-          'FCA': ["Jeep", "Alfa Romeo", "Chrysler", "Lancia"]
+          'FCA': ['Jeep', 'Alfa Romeo', 'Chrysler', 'Lancia']
         };
         // execute
         final jsonString = JsonString.encode(data);
@@ -34,7 +36,7 @@ void main() {
         // prepare input
         final data = [
           1,
-          "H",
+          'H',
           3.15,
           [
             [
@@ -110,7 +112,7 @@ void main() {
       'success test: try to encode an object instance with a valid .toJson() method',
       () {
         // prepare input
-        final data = Data("Hey!");
+        final data = Data('Hey!');
         // execute
         final testCall = () => JsonString.encode(data);
         final jsonString = testCall();

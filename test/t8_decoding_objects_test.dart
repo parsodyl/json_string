@@ -42,7 +42,7 @@ void main() {
       },
     );
   });
-  group('Object-list decod method', () {
+  group('Object-list decode method', () {
     test(
       'fail test: .decodeAsObjectList() with null input',
       () {
