@@ -12,7 +12,7 @@ void main() {
         final jsonString = JsonString(source);
         final testCall = () => jsonString.decodeAsObject(null);
         // check
-        expect(testCall, throwsA(TypeMatcher<JsonDecodingError>()));
+        expect(testCall, throwsA(TypeMatcher<AssertionError>()));
       },
     );
     test(
@@ -52,7 +52,7 @@ void main() {
         final jsonString = JsonString(source);
         final testCall = () => jsonString.decodeAsObjectList(null);
         // check
-        expect(testCall, throwsA(TypeMatcher<JsonDecodingError>()));
+        expect(testCall, throwsA(TypeMatcher<AssertionError>()));
       },
     );
     test(

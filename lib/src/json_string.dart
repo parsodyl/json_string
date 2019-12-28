@@ -141,17 +141,21 @@ class JsonString {
   ///
   /// The JSON data must be a JSON object or it will throw
   /// a [JsonDecodingError].
-  T decodeAsObject<T extends Object>(JsonObjectDecoder<T> decoder) =>
-      wrapJsonUtilOperation(
-          () => _decodedValue.asObject(decoder, skipIfNull: true));
+  T decodeAsObject<T extends Object>(JsonObjectDecoder<T> decoder) {
+    assert(decoder != null);
+    return wrapJsonUtilOperation(
+        () => _decodedValue.asObject(decoder, skipIfNull: true));
+  }
 
   /// Returns the JSON data decoded as an instance of [List<T extends Object>].
   ///
   /// The JSON data must be a list of JSON objects or it
   /// will throw a [JsonDecodingError].
-  List<T> decodeAsObjectList<T extends Object>(JsonObjectDecoder<T> decoder) =>
-      wrapJsonUtilOperation(
-          () => _decodedValue.asObjectList(decoder, skipNullValues: true));
+  List<T> decodeAsObjectList<T extends Object>(JsonObjectDecoder<T> decoder) {
+    assert(decoder != null);
+    return wrapJsonUtilOperation(
+        () => _decodedValue.asObjectList(decoder, skipNullValues: true));
+  }
 
   // <<standard methods>>
 
