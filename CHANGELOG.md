@@ -1,3 +1,9 @@
+## 2.0.0
+
+- **JsonFormatException**, **JsonEncodingError**, **JsonDecodingError** are still visible, but moved to json_util package.
+- Null values are now treated as primitive values.
+- **encodeObjectList()** now accepts null filled lists as input.
+
 ## 1.1.0
 
 * Clarified `Jsonable` mixin usage (non-breaking).
