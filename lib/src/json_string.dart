@@ -22,7 +22,7 @@ class JsonString {
 
   /// Constructs a [JsonString] if [source] is a valid JSON.
   ///
-  /// If not, it returns [null].
+  /// If not, it returns `null`.
   ///
   /// If the optional [enableCache] parameter is set to `true`,
   /// a cache of the decoded value is provided.
@@ -49,7 +49,7 @@ class JsonString {
   /// Constructs a [JsonString] converting [value] into a valid JSON
   /// primitive value.
   ///
-  /// [T] must be a primitive type (int, double, bool or String).
+  /// [T] must be a primitive type (int, double, bool, String or Null).
   static JsonString encodePrimitiveValue<T>(T value) {
     assert(value != null);
     return wrapJsonUtilOperation(() {
@@ -60,7 +60,7 @@ class JsonString {
 
   /// Constructs a [JsonString] converting [list] into a valid JSON List.
   ///
-  /// [T] must be a primitive type (int, double, bool or String).
+  /// [T] must be a primitive type (int, double, bool, String or Null).
   static JsonString encodePrimitiveList<T>(List<T> list) {
     assert(list != null);
     return wrapJsonUtilOperation(() {
@@ -188,16 +188,12 @@ class JsonString {
   static JsonString _constructJsonString(String source, bool enableCache) {
     final decodedSource = DecodedValue.from(source);
     final cachedValue = enableCache ? decodedSource : null;
-    return JsonString._(_encode(decodedSource.value), cachedValue);
-  }
-
-  static String _encode(Object value, {Function(Object) encoder}) {
-    return convertEncode(value, toEncodable: encoder);
+    return JsonString._(convertEncode(decodedSource.value), cachedValue);
   }
 
   static String _encodeSafely(Object value, {Function(Object) encoder}) {
     try {
-      return _encode(value, encoder: encoder);
+      return convertEncode(value, toEncodable: encoder);
     } catch (e) {
       throw JsonEncodingError(e);
     }
