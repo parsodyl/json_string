@@ -1,3 +1,8 @@
+# 2.0.1
+
+- Upgraded json_util dependency.
+- README fix.
+
 ## 2.0.0
 
 - **JsonFormatException**, **JsonEncodingError**, **JsonDecodingError** are still visible, but moved to json_util package.
