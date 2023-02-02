@@ -339,7 +339,7 @@ final jsonString = JsonString('false');
 final amIaGenius = jsonString.decodeAsPrimitiveValue<bool>();
 ```
 
-#### Nullable primitive lists and values
+##### Nullable primitive lists and values
 
 ```dart
 // nullable integer value decoding
