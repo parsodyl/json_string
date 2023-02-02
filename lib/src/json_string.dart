@@ -1,4 +1,5 @@
 import 'package:json_string/src/functions.dart';
+import 'package:json_string/src/jsonable.dart';
 import 'package:json_string/src/utils.dart';
 import 'package:json_util/json_util.dart';
 
@@ -16,7 +17,6 @@ class JsonString {
   /// If the optional [enableCache] parameter is set to `true`,
   /// a cache of the decoded value is provided.
   factory JsonString(String source, {bool enableCache = false}) {
-    assert(source != null);
     return _constructJsonString(source, enableCache);
   }
 
@@ -26,8 +26,7 @@ class JsonString {
   ///
   /// If the optional [enableCache] parameter is set to `true`,
   /// a cache of the decoded value is provided.
-  factory JsonString.orNull(String source, {bool enableCache = false}) {
-    assert(source != null);
+  static JsonString? orNull(String source, {bool enableCache = false}) {
     try {
       return _constructJsonString(source, enableCache);
     } catch (_) {
@@ -42,7 +41,7 @@ class JsonString {
   /// Attention: this is just a wrapper around the Dart built-in
   /// function `json.encode()`, you should use this in special cases only.
   /// Check the other encoding functions for more common usages.
-  JsonString.encode(Object value, {Function(Object object) encoder})
+  JsonString.encode(Object? value, {ToEncodable? encoder})
       : source = _encodeSafely(value, encoder: encoder),
         _cachedValue = null;
 
@@ -51,7 +50,6 @@ class JsonString {
   ///
   /// [T] must be a primitive type (int, double, bool, String or Null).
   static JsonString encodePrimitiveValue<T>(T value) {
-    assert(value != null);
     return wrapJsonUtilOperation(() {
       final encodable = EncodableValue.fromPrimitiveValue<T>(value);
       return JsonString._(encodable.encode(), null);
@@ -62,7 +60,6 @@ class JsonString {
   ///
   /// [T] must be a primitive type (int, double, bool, String or Null).
   static JsonString encodePrimitiveList<T>(List<T> list) {
-    assert(list != null);
     return wrapJsonUtilOperation(() {
       final encodable = EncodableValue.fromPrimitiveList<T>(list);
       return JsonString._(encodable.encode(), null);
@@ -75,12 +72,23 @@ class JsonString {
   /// If [T] implements [Jsonable] interface, the result returned
   /// by `.toJson()` is used during the conversion.
   /// If not, the [encoder] function must be provided.
-  static JsonString encodeObject<T extends Object>(T value,
-      {JsonObjectEncoder<T> encoder}) {
-    assert(value != null);
+  ///
+  /// To turn the runtime [Jsonable] check off, set [checkIfJsonable]
+  /// to `false`.
+  static JsonString encodeObject<T>(
+    T value, {
+    JsonObjectEncoder<T>? encoder,
+    bool checkIfJsonable = true,
+  }) {
+    if (checkIfJsonable && encoder == null && value is! Jsonable?) {
+      throw JsonEncodingError('[T] must mix in Jsonable when `checkIfJsonable` '
+          'is set to true and an encoder is not provided');
+    }
     return wrapJsonUtilOperation(() {
-      final dynamicMap = disassembleObject<T>(value, builder: encoder);
-      final encodable = EncodableValue.map(dynamicMap);
+      final encodable = EncodableValue.fromObject<T, Map<String, dynamic>?>(
+        value,
+        encoder: encoder,
+      );
       return JsonString._(encodable.encode(), null);
     });
   }
@@ -88,12 +96,20 @@ class JsonString {
   /// Constructs a [JsonString] converting [list] into a valid JSON list.
   ///
   /// [T] represents a JSON Object, see `.encodeObject()` for reference.
-  static JsonString encodeObjectList<T extends Object>(List<T> list,
-      {JsonObjectEncoder<T> encoder}) {
-    assert(list != null);
+  static JsonString encodeObjectList<T>(
+    List<T> list, {
+    JsonObjectEncoder<T>? encoder,
+    bool checkIfJsonable = true,
+  }) {
+    if (checkIfJsonable && encoder == null && list is! List<Jsonable?>) {
+      throw JsonEncodingError('[T] must mix in Jsonable when `checkIfJsonable` '
+          'is set to true and an encoder is not provided');
+    }
     return wrapJsonUtilOperation(() {
-      final dynamicList = disassembleObjectList<T>(list, builder: encoder);
-      final encodable = EncodableValue.list(dynamicList);
+      final encodable = EncodableValue.fromObjectList<T, Map<String, dynamic>?>(
+        list,
+        encoder: encoder,
+      );
       return JsonString._(encodable.encode(), null);
     });
   }
@@ -141,20 +157,36 @@ class JsonString {
   ///
   /// The JSON data must be a JSON object or it will throw
   /// a [JsonDecodingError].
-  T decodeAsObject<T extends Object>(JsonObjectDecoder<T> decoder) {
-    assert(decoder != null);
-    return wrapJsonUtilOperation(
-        () => _decodedValue.asObject(decoder, skipIfNull: true));
+  ///
+  /// For JSON nullable objects, please use [decodeAsNullableObject].
+  T decodeAsObject<T>(JsonObjectDecoder<T> decoder) {
+    return wrapJsonUtilOperation(() => _decodedValue.asObject(decoder));
+  }
+
+  /// Returns the JSON data decoded as an instance of [T extends Object].
+  ///
+  /// The JSON data must be a JSON object or null, otherwise it will throw
+  /// a [JsonDecodingError].
+  T decodeAsNullableObject<T>(JsonObjectNullableDecoder<T> decoder) {
+    return wrapJsonUtilOperation(() => _decodedValue.asObject(decoder));
   }
 
   /// Returns the JSON data decoded as an instance of [List<T extends Object>].
   ///
   /// The JSON data must be a list of JSON objects or it
-  /// will throw a [JsonDecodingError].
-  List<T> decodeAsObjectList<T extends Object>(JsonObjectDecoder<T> decoder) {
-    assert(decoder != null);
-    return wrapJsonUtilOperation(
-        () => _decodedValue.asObjectList(decoder, skipNullValues: true));
+  /// will throw a [JsonDecodingError]
+  ///
+  /// For JSON nullable objects, please use [decodeAsNullableObjectList].
+  List<T> decodeAsObjectList<T>(JsonObjectDecoder<T> decoder) {
+    return wrapJsonUtilOperation(() => _decodedValue.asObjectList(decoder));
+  }
+
+  /// Returns the JSON data decoded as an instance of [List<T extends Object>].
+  ///
+  /// The JSON data must be a list of JSON objects or null, otherwise it will
+  /// throw a [JsonDecodingError].
+  List<T> decodeAsNullableObjectList<T>(JsonObjectNullableDecoder<T> decoder) {
+    return wrapJsonUtilOperation(() => _decodedValue.asObjectList(decoder));
   }
 
   // <<standard methods>>
@@ -180,12 +212,12 @@ class JsonString {
 
   // <<private fields>>
 
-  final DecodedValue _cachedValue;
+  final DecodedValue? _cachedValue;
 
   // <<private getters>>
 
   DecodedValue get _decodedValue =>
-      (_cachedValue != null) ? _cachedValue : DecodedValue.from(source);
+      (_cachedValue != null) ? _cachedValue! : DecodedValue.from(source);
 
   // <<private static methods>>
 
@@ -195,7 +227,7 @@ class JsonString {
     return JsonString._(convertEncode(decodedSource.value), cachedValue);
   }
 
-  static String _encodeSafely(Object value, {Function(Object) encoder}) {
+  static String _encodeSafely(Object? value, {ToEncodable? encoder}) {
     try {
       return convertEncode(value, toEncodable: encoder);
     } catch (e) {

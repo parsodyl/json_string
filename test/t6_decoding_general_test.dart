@@ -10,7 +10,7 @@ void main() {
         final source = '{}';
         // execute
         final jsonString = JsonString(source);
-        final d = jsonString.decodedValue;
+        final dynamic d = jsonString.decodedValue;
         // check
         expect(d, TypeMatcher<Map<String, dynamic>>());
         expect(d as Map<String, dynamic>, hasLength(isZero));
@@ -23,7 +23,7 @@ void main() {
         final source = '[]';
         // execute
         final jsonString = JsonString(source);
-        final d = jsonString.decodedValue;
+        final dynamic d = jsonString.decodedValue;
         // check
         expect(d, TypeMatcher<List<dynamic>>());
         expect(d as List<dynamic>, hasLength(isZero));
@@ -40,7 +40,7 @@ void main() {
         final source = '{"$key0":"$value0","$key1":"$value1"}';
         // execute
         final jsonString = JsonString(source);
-        final d = jsonString.decodedValue;
+        final dynamic d = jsonString.decodedValue;
         // check
         expect(d, TypeMatcher<Map<String, dynamic>>());
         expect(d[key0], equals(value0));
@@ -56,7 +56,7 @@ void main() {
         final source = '["$value0","$value1"]';
         // execute
         final jsonString = JsonString(source);
-        final d = jsonString.decodedValue;
+        final dynamic d = jsonString.decodedValue;
         // check
         expect(d, TypeMatcher<List<dynamic>>());
         expect(d[0], equals(value0));

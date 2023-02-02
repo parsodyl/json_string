@@ -16,7 +16,7 @@ Add `json_string` to `pubspec.yaml` under the `dependencies` subsection.
 
 ```yaml
 dependencies:
-  json_string: ^2.0.1
+  json_string: ^3.0.0
 ```
 ## Install
 
@@ -31,7 +31,7 @@ $ pub get
 with **flutter**:
 
 ```bash
-$ flutter packages get
+$ flutter pub get
 ```
 
 ## Import
@@ -88,11 +88,11 @@ print(credentials['password']); // querty
 
 ### Encoding
 
-JsonString provides a set of different methods to encode Dart types, all implemented in a **type-safe** way and without any use of reflection or code generators.
+JsonString provides a set of different methods to encode Dart types, all implemented in a **type-safe** way.
 
 #### Plain objects
 
-Mark as `Jsonable` your "json2dart" style class, and encode it with no effort:
+Mark as `Jsonable` your "json2dart" style class, so you won't forget to implement the `toJson()` method:
 
 ```dart
 // class declaration
@@ -101,11 +101,11 @@ class User with Jsonable {
   String password;
 
   User({
-    this.username,
-    this.password,
+    required this.username,
+    required this.password,
   });
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'username': username,
         'password': password,
       };
@@ -142,6 +142,7 @@ final jsonString2 = JsonString.encodeObjectList(userList, encoder: (u) => {
     'ba': btoa("${u.username}:${u.password}"),
 });
 ```
+
 #### Primitive lists
 
 If you want to encode a list of primitive values (**int**, **double**, **String**, **bool** or **Null**), use `encodePrimitiveList()`:
@@ -192,6 +193,7 @@ final jsonString = JsonString.encodePrimitiveValue(amIaGenius);
 final usefulValue = null;
 final jsonString = JsonString.encodePrimitiveValue(usefulValue);
 ```
+
 ### Decoding
 
 It's time to access the Dart counterpart of some JSON data. 
@@ -199,8 +201,8 @@ Here json_string helps you with several solutions. You have **properties** for s
 
 #### Properties
 
-When you construct a JsonString object, it checks on your behalf if the source represents a valid piece of JSON data, but it doesn’t tell you **what kind of data** it contains.
-If you don’t know the expected type or you simply don’t care about it, just access the `decodedValue` property. It works every time: 
+When you construct a JsonString object, it checks on your behalf if the source represents a valid piece of JSON data, but it doesn’t tell you **what kind of data** it contains.
+If you don’t know the expected type or you simply don’t care about it, just access the `decodedValue` property. It works every time: 
 
 ```dart
 // any type
@@ -231,22 +233,22 @@ try {
 
 Decoding methods are similar to the encoding ones. They simply do the job the other way round.
 
-##### Plain objects and object lists
+##### Plain objects and object lists (non-nullable)
 
 ```dart
 // class declaration
-class User with Jsonable {
+class User {
   String username;
   String password;
 
   User({
-    this.username,
-    this.password,
+    required this.username,
+    required this.password,
   });
 
   static User fromJson(Map<String, dynamic> json) => User(
-        username: json['username'],
-        password: json['password'],
+        username: json['username'] as String,
+        password: json['password'] as String,
       );
 }
 
@@ -262,6 +264,39 @@ final jsonString = JsonString('''[
 ]''');
 
 final userList = jsonString.decodeAsObjectList(User.fromJson);
+```
+
+##### Plain objects and object lists (nullable)
+
+```dart
+// class declaration
+class User {
+  String? username;
+  String? password;
+
+  User({
+    this.username,
+    this.password,
+  });
+
+  static User fromJson(Map<String, dynamic>? json) => User(
+        username: json?['username'] as String?,
+        password: json?['password'] as String?,
+      );
+}
+
+// object decoding
+final jsonString = JsonString('null');
+
+final user = jsonString.decodeAsNullableObject(User.fromJson);
+
+// object list decoding
+final jsonString = JsonString('''[
+  {"username":"john_doe","password":"querty"},
+  null
+]''');
+
+final userList = jsonString.decodeAsNullableObjectList(User.fromJson);
 ```
 
 ##### Primitive lists
@@ -303,13 +338,26 @@ final pi = jsonString.decodeAsPrimitiveValue<double>();
 final jsonString = JsonString('false');
 final amIaGenius = jsonString.decodeAsPrimitiveValue<bool>();
 ```
+
+#### Nullable primitive lists and values
+
+```dart
+// nullable integer value decoding
+final jsonString = JsonString('null');
+final maybeAnswer = jsonString.decodeAsPrimitiveValue<int?>();
+
+// nullable integer list decoding
+final jsonString = JsonString('[42, null, 25, 74, null]');
+final availableAges = jsonString.decodeAsPrimitiveList<int?>();
+```
+
 ### Advanced
 
 Here's a list of some advanced available options.
 
 #### Complex encoding
 
-If you need to encode complicated structures, you can use `JsonString.encode()` which is just a wrapper around the built-in `dart:convert` [encode()](https://api.dartlang.org/stable/dart-convert/JsonCodec/encode.html) method:
+If you need to encode complicated structures, you can use `JsonString.encode()` which is just a wrapper around the built-in `dart:convert` [encode](https://api.dartlang.org/stable/dart-convert/JsonCodec/encode.html) method:
 
 ```dart
 const data = [{
@@ -334,6 +382,17 @@ final jsonString = JsonString(source, enableCache: true);
 final decodedMap = jsonString.decodedValueAsMap; // immediate access
 ```
 
+#### Turn off Jsonable check
+
+If you don't want to use `Jsonable`, you can set `checkIfJsonable` to **false** when encoding objects.
+
+```dart
+// singleObject is not a Jsonable object
+final jsonString = JsonString.encodeObject(singleObject, checkIfJsonable: false);
+// objectList is not a list of Jsonable objects
+final jsonString = JsonString.encodeObjectList(objectList, checkIfJsonable: false);
+```
+
 ## Contribute
 
-If you find a bug or you would like to see a new feature, please create an [issue](https://github.com/parsodyl/json_string/issues). 
+If you find a bug, or you would like to see a new feature, please create an [issue](https://github.com/parsodyl/json_string/issues). 

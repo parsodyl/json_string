@@ -1,11 +1,25 @@
-# 2.0.1
+## 3.0.0
+
+- Full null-safety migration
+- `Jsonable` has changed as followed (typically non-breaking):
+    - `toJson()` has now **dynamic** as return type and can be overridden
+    - when using `encodeObject<T>()` or `encodeObjectList<T>()`, making **T** `Jsonable` is no longer required
+      if `checkIfJsonable` is set to **false**
+- New methods defined for object decoding (breaking):
+    - `decodeAsObject<T>(decoder)`
+    - `decodeAsNullableObject<T>(nullableDecoder)`
+    - `decodeAsObjectList<T>(decoder)`
+    - `decodeAsNullableObjectList<T>(nullableDecoder)`
+
+## 2.0.1
 
 - Upgraded json_util dependency.
 - README fix.
 
 ## 2.0.0
 
-- **JsonFormatException**, **JsonEncodingError**, **JsonDecodingError** are still visible, but moved to json_util package.
+- **JsonFormatException**, **JsonEncodingError**, **JsonDecodingError** are still visible, but moved to json_util
+  package.
 - Null values are now treated as primitive values.
 - **encodeObjectList()** now accepts null filled lists as input.
 

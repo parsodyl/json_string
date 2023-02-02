@@ -4,14 +4,16 @@ import 'package:test/test.dart';
 void main() {
   group('Primitive-value encode method', () {
     test(
-      'fail test: .encodePrimitiveValue() with null imputs #1',
+      'success test: .encodePrimitiveValue() with null inputs #1',
       () {
         // prepare input
-        final data = null;
+        final Null data = null;
         // execute
-        final testCall = () => JsonString.encodePrimitiveValue(data);
+        final jsonString = JsonString.encodePrimitiveValue<Null>(data);
         // check
-        expect(testCall, throwsA(TypeMatcher<AssertionError>()));
+        expect(jsonString, isNotNull);
+        expect(jsonString, TypeMatcher<JsonString>());
+        expect(jsonString.source, equals('null'));
       },
     );
     test(
@@ -24,6 +26,7 @@ void main() {
         // check
         expect(jsonString, isNotNull);
         expect(jsonString, TypeMatcher<JsonString>());
+        expect(jsonString.source, equals('42'));
       },
     );
     test(
@@ -36,6 +39,7 @@ void main() {
         // check
         expect(jsonString, isNotNull);
         expect(jsonString, TypeMatcher<JsonString>());
+        expect(jsonString.source, equals('3.14'));
       },
     );
     test(
@@ -48,19 +52,22 @@ void main() {
         // check
         expect(jsonString, isNotNull);
         expect(jsonString, TypeMatcher<JsonString>());
+        expect(jsonString.source, equals('true'));
       },
     );
     test(
       'success test: encode a primitive value #4 (String)',
       () {
         // prepare input
-        final data = "Happy coding!";
+        final data = 'Happy coding!';
         // execute
         final jsonString = JsonString.encodePrimitiveValue(data);
         // check
         expect(jsonString, isNotNull);
         expect(jsonString, TypeMatcher<JsonString>());
+        expect(jsonString.source, equals('"Happy coding!"'));
       },
+      skip: false,
     );
     test(
       'fail test: try to encode a not-primitive value #1',
@@ -72,22 +79,12 @@ void main() {
         // check
         expect(testCall, throwsA(TypeMatcher<JsonEncodingError>()));
       },
+      skip: false,
     );
   });
   group('Primitive-list encode method', () {
     test(
-      'fail test: .encodePrimitiveList() with null imputs #1',
-      () {
-        // prepare input
-        final data = null;
-        // execute
-        final testCall = () => JsonString.encodePrimitiveList(data);
-        // check
-        expect(testCall, throwsA(TypeMatcher<AssertionError>()));
-      },
-    );
-    test(
-      'success test: encode a primivive list #1 (int)',
+      'success test: encode a primitive list #1 (int)',
       () {
         // prepare input
         final data = [1, 2, 3, 4, 5];
@@ -99,7 +96,7 @@ void main() {
       },
     );
     test(
-      'success test: encode a primivive list #2 (double)',
+      'success test: encode a primitive list #2 (double)',
       () {
         // prepare input
         final data = [1.0, 2.0, 3.0, 4.0, 5.0];
@@ -111,7 +108,7 @@ void main() {
       },
     );
     test(
-      'success test: encode a primivive list #3 (bool)',
+      'success test: encode a primitive list #3 (bool)',
       () {
         // prepare input
         final data = [true, false, false, true, false];
@@ -123,10 +120,22 @@ void main() {
       },
     );
     test(
-      'success test: encode a primivive list #4 (String)',
+      'success test: encode a primitive list #4 (String)',
       () {
         // prepare input
-        final data = ["h", "e", "l", "l", "o"];
+        final data = ['h', 'e', 'l', 'l', 'o'];
+        // execute
+        final jsonString = JsonString.encodePrimitiveList(data);
+        // check
+        expect(jsonString, isNotNull);
+        expect(jsonString, TypeMatcher<JsonString>());
+      },
+    );
+    test(
+      'success test: encode a primitive list #5 (String?)',
+          () {
+        // prepare input
+        final data = ['h', null, 'l', null, 'o'];
         // execute
         final jsonString = JsonString.encodePrimitiveList(data);
         // check
@@ -147,12 +156,12 @@ void main() {
       },
     );
     test(
-      'seccess test: try to encode a null filled list #2 (explicit type)',
+      'success test: try to encode a null filled list #2 (explicit type)',
       () {
         // prepare input
         final data = [null, null, null, null, null];
         // execute
-        final testCall = () => JsonString.encodePrimitiveList<String>(data);
+        final testCall = () => JsonString.encodePrimitiveList<String?>(data);
         final jsonString = testCall();
         // check
         expect(testCall, isNot(throwsA(TypeMatcher<JsonEncodingError>())));

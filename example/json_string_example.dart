@@ -1,11 +1,12 @@
-import 'package:json_string/json_string.dart';
 import 'package:collection/collection.dart';
+import 'package:json_string/json_string.dart';
 
 void main() {
   const externalSource = '{"username":"john_doe","password":"querty"}';
   var jsonString = JsonString.orNull(externalSource);
   if (jsonString == null) {
-    print("Bad source!");
+    print('Bad source!');
+    return;
   }
   final user1 = jsonString.decodeAsObject(User.fromJson);
   final user2 = User(username: 'clara_brothers', password: 'asdfgh');
@@ -16,7 +17,7 @@ void main() {
   print(internalSource);
 
   final decodedList = jsonString.decodeAsObjectList(User.fromJson);
-  print(ListEquality().equals(decodedList, userList)); // true
+  print(ListEquality<User>().equals(decodedList, userList)); // true
 }
 
 class User with Jsonable {
@@ -24,16 +25,17 @@ class User with Jsonable {
   String password;
 
   User({
-    this.username,
-    this.password,
+    required this.username,
+    required this.password,
   });
 
   static User fromJson(Map<String, dynamic> json) => User(
-        username: json['username'],
-        password: json['password'],
+        username: json['username'] as String,
+        password: json['password'] as String,
       );
 
-  Map<String, dynamic> toJson() => {
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'username': username,
         'password': password,
       };

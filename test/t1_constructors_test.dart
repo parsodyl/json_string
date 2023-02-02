@@ -26,17 +26,6 @@ void main() {
       },
     );
     test(
-      'fail test: construct JsonString with bad source #0 (null input)',
-      () {
-        // prepare input
-        final badSource = null;
-        // execute
-        final testCall = () => JsonString(badSource);
-        // check
-        expect(testCall, throwsA(TypeMatcher<AssertionError>()));
-      },
-    );
-    test(
       'fail test: construct JsonString with bad source #1 (format error)',
       () {
         // prepare input
@@ -86,17 +75,6 @@ void main() {
         // check
         expect(jsonString, TypeMatcher<JsonString>());
         expect(jsonString, isNotNull);
-      },
-    );
-    test(
-      'fail test: construct JsonString with bad source #0 (null input)',
-      () {
-        // prepare input
-        final badSource = null;
-        // execute
-        final testCall = () => JsonString.orNull(badSource);
-        // check
-        expect(testCall, throwsA(TypeMatcher<AssertionError>()));
       },
     );
     test(
