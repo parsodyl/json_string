@@ -1,3 +1,8 @@
+## 3.0.1
+
+- Upgraded json_util dependency.
+- README little fix.
+
 ## 3.0.0
 
 - Full null-safety migration

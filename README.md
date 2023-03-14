@@ -16,7 +16,7 @@ Add `json_string` to `pubspec.yaml` under the `dependencies` subsection.
 
 ```yaml
 dependencies:
-  json_string: ^3.0.0
+  json_string: ^3.0.1
 ```
 ## Install
 
@@ -64,7 +64,7 @@ Or just work with null values, if you prefer:
 ```dart
 final jsonString = JsonString.orNull('{"username":"john_doe","password":"querty"}');
 
-if(jsonString == null) {
+if (jsonString == null) {
     print('Invalid JSON format');
 }
 // ...
@@ -104,7 +104,8 @@ class User with Jsonable {
     required this.username,
     required this.password,
   });
-
+  
+  @override
   Map<String, dynamic> toJson() => <String, dynamic>{
         'username': username,
         'password': password,
@@ -342,13 +343,13 @@ final amIaGenius = jsonString.decodeAsPrimitiveValue<bool>();
 ##### Nullable primitive lists and values
 
 ```dart
-// nullable integer value decoding
-final jsonString = JsonString('null');
-final maybeAnswer = jsonString.decodeAsPrimitiveValue<int?>();
-
 // nullable integer list decoding
 final jsonString = JsonString('[42, null, 25, 74, null]');
 final availableAges = jsonString.decodeAsPrimitiveList<int?>();
+
+// nullable integer value decoding
+final jsonString = JsonString('null');
+final maybeAnswer = jsonString.decodeAsPrimitiveValue<int?>();
 ```
 
 ### Advanced
